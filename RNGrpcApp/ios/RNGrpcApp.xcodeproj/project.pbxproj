@@ -13,8 +13,10 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		286C5FDA5CAD4F97F04B7BAE /* Pods_RNGrpcApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48D9E29D36D118F70BFB5C53 /* Pods_RNGrpcApp.framework */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		85AD6177291CC089001F6EBA /* authService.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AD6175291CC089001F6EBA /* authService.pb.swift */; };
-		85AD6178291CC089001F6EBA /* authService.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AD6176291CC089001F6EBA /* authService.grpc.swift */; };
+		851D10942921DA6300B9238F /* authService.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851D10922921DA6200B9238F /* authService.grpc.swift */; };
+		851D10952921DA6300B9238F /* authService.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851D10932921DA6200B9238F /* authService.pb.swift */; };
+		851D10972921DB5900B9238F /* AuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851D10962921DB5900B9238F /* AuthClient.swift */; };
+		851D10992921FB4700B9238F /* AuthClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 851D10982921FB4700B9238F /* AuthClient.m */; };
 		8F67FD1D2C222084B033A62B /* Pods_RNGrpcApp_RNGrpcAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 301D34575C261657983744C2 /* Pods_RNGrpcApp_RNGrpcAppTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -44,8 +46,12 @@
 		5709B34CF0A7D63546082F79 /* Pods-RNGrpcApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNGrpcApp.release.xcconfig"; path = "Target Support Files/Pods-RNGrpcApp/Pods-RNGrpcApp.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-RNGrpcApp-RNGrpcAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNGrpcApp-RNGrpcAppTests.debug.xcconfig"; path = "Target Support Files/Pods-RNGrpcApp-RNGrpcAppTests/Pods-RNGrpcApp-RNGrpcAppTests.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = RNGrpcApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		85AD6175291CC089001F6EBA /* authService.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = authService.pb.swift; sourceTree = "<group>"; };
-		85AD6176291CC089001F6EBA /* authService.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = authService.grpc.swift; sourceTree = "<group>"; };
+		851D108C291F528700B9238F /* GRPC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GRPC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		851D10912921DA6100B9238F /* RNGrpcApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNGrpcApp-Bridging-Header.h"; sourceTree = "<group>"; };
+		851D10922921DA6200B9238F /* authService.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = authService.grpc.swift; path = ../../proto/ios/authService.grpc.swift; sourceTree = "<group>"; };
+		851D10932921DA6200B9238F /* authService.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = authService.pb.swift; path = ../../proto/ios/authService.pb.swift; sourceTree = "<group>"; };
+		851D10962921DB5900B9238F /* AuthClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthClient.swift; sourceTree = "<group>"; };
+		851D10982921FB4700B9238F /* AuthClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuthClient.m; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-RNGrpcApp-RNGrpcAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNGrpcApp-RNGrpcAppTests.release.xcconfig"; path = "Target Support Files/Pods-RNGrpcApp-RNGrpcAppTests/Pods-RNGrpcApp-RNGrpcAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -90,14 +96,17 @@
 		13B07FAE1A68108700A75B9A /* RNGrpcApp */ = {
 			isa = PBXGroup;
 			children = (
-				85AD6176291CC089001F6EBA /* authService.grpc.swift */,
-				85AD6175291CC089001F6EBA /* authService.pb.swift */,
+				851D10922921DA6200B9238F /* authService.grpc.swift */,
+				851D10932921DA6200B9238F /* authService.pb.swift */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				851D10912921DA6100B9238F /* RNGrpcApp-Bridging-Header.h */,
+				851D10962921DB5900B9238F /* AuthClient.swift */,
+				851D10982921FB4700B9238F /* AuthClient.m */,
 			);
 			name = RNGrpcApp;
 			sourceTree = "<group>";
@@ -105,6 +114,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				851D108C291F528700B9238F /* GRPC.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				48D9E29D36D118F70BFB5C53 /* Pods_RNGrpcApp.framework */,
 				301D34575C261657983744C2 /* Pods_RNGrpcApp_RNGrpcAppTests.framework */,
@@ -382,10 +392,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				85AD6177291CC089001F6EBA /* authService.pb.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
-				85AD6178291CC089001F6EBA /* authService.grpc.swift in Sources */,
+				851D10972921DB5900B9238F /* AuthClient.swift in Sources */,
+				851D10992921FB4700B9238F /* AuthClient.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				851D10952921DA6300B9238F /* authService.pb.swift in Sources */,
+				851D10942921DA6300B9238F /* authService.grpc.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -473,6 +485,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = RNGrpcApp;
+				SWIFT_OBJC_BRIDGING_HEADER = "RNGrpcApp-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -498,6 +511,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = RNGrpcApp;
+				SWIFT_OBJC_BRIDGING_HEADER = "RNGrpcApp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -536,7 +550,7 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -608,7 +622,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;

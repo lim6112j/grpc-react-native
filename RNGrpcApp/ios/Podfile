@@ -5,9 +5,6 @@ platform :ios, '14.0'
 install! 'cocoapods', :deterministic_uuids => false
 
 target 'RNGrpcApp' do
-  use_frameworks!
-  pod 'gRPC-Swift', '~>1.5.0'
-  pod 'gRPC-Swift-Plugins'
   config = use_native_modules!
 
   # Flags change depending on the env values.
@@ -18,7 +15,7 @@ target 'RNGrpcApp' do
     # Hermes is now enabled by default. Disable by setting this flag to false.
     # Upcoming versions of React Native may rely on get_default_flags(), but
     # we make it explicit here to aid in the React Native upgrade process.
-    :hermes_enabled => true,
+    :hermes_enabled => false,
     :fabric_enabled => flags[:fabric_enabled],
     # Enables Flipper.
     #
@@ -28,6 +25,9 @@ target 'RNGrpcApp' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+  use_frameworks!
+  pod 'gRPC-Swift'
+  pod 'gRPC-Swift-Plugins'
 
   target 'RNGrpcAppTests' do
     inherit! :complete

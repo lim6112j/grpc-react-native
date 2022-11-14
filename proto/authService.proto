@@ -7,7 +7,7 @@ message AccountCredentials {
 }
 message OauthCredentials {
   string token = 3;
-  uint32 timeoutSecconds = 4;
+  uint32 timeoutSeconds = 4;
 }
 service AuthServiceRoutes {
   rpc Login(AccountCredentials) returns (OauthCredentials) {}

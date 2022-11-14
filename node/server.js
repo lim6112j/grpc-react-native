@@ -21,19 +21,23 @@ class AuthServer {
   }
   login(username, password) {
     let loginData = {}
+    console.log('login ing..., activeusers => ', this.activeUsers)
     if (username in this.activeUsers) {
       loginData = this.activeUsers[username]
       this.authTokens[loginData.authToken] = loginData
     } else {
+      console.log('no user in list')
       loginData = new AuthLogin(username, password)
       this.authTokens[loginData.authToken] = loginData
       this.activeUsers[username] = loginData.authToken
+      console.log('new user => ', this.activeUsers)
     }
     const currentTime = new Date()
     const oauthCredentials = {
       token: loginData.authToken,
       timeoutSeconds: Math.floor((loginData.expires - currentTime) / 1000)
     }
+    console.log(oauthCredentials)
     return oauthCredentials
   }
   logout() {
@@ -49,11 +53,12 @@ class AuthServer {
 class AuthLogin {
   constructor(username, password) {
     this.username = username
-    this.authToken = Math.random().toString(16).substr(2, 8)
+    this.authToken = Math.random().toString(16)
     this.refreshExpiration()
   }
   refreshExpiration() {
-    const currentTime = new Data()
+    console.log('expires refreshing')
+    const currentTime = new Date()
     this.expires = currentTime.setDate(currentTime.getDate() + 1)
   }
 }
