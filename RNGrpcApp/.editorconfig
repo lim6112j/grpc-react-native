@@ -1,0 +1,4 @@
+root=true
+[ios/*.swift]
+indent_style=space
+indent_size=2

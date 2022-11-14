@@ -18,7 +18,7 @@ import NIO
     eventLoopGroup: EventLoopGroup
   ) throws -> AuthService_AuthServiceRoutesClient {
     let secureGrpcChannel = try GRPCChannelPool.with(
-      target: .host("127.0.0.1", port: 51009),
+      target: .host("127.0.0.1", port: port),
       transportSecurity: .plaintext,
       eventLoopGroup: eventLoopGroup
     )
