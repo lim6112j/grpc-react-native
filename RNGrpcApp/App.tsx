@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable prettier/prettier */
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -8,44 +10,42 @@
  * @format
  */
 
-import React, { useContext, useState } from 'react';
-import { Button, NativeModules } from 'react-native';
+import React, { useState } from 'react';
+import { Button, NativeModules, Alert } from 'react-native';
+import { Greeter } from './helloworld';
 const { AuthClient } = NativeModules;
 import {
     SafeAreaView,
-    StatusBar,
-    StyleSheet,
     Text,
     TextInput,
-    useColorScheme,
-    View,
 } from 'react-native';
 
-import {
-    Colors,
-    DebugInstructions,
-    Header,
-    LearnMoreLinks,
-    ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
+async function doRpc() {
+    try {
+        const response = await Greeter.sayHello({ name: 'ben lim' });
+        Alert.alert('android grpc response', response.message);
+    } catch (e: any) {
+        Alert.alert('error', e.message);
+    }
+}
+doRpc();
 const App = () => {
-    const [username, setUsername] = useState('email@example.com')
-    const [password, setPassword] = useState('password')
-    const [oauthToken, setOauthToken] = useState('')
+    const [username, setUsername] = useState('email@example.com');
+    const [password, setPassword] = useState('password');
+    const [oauthToken, setOauthToken] = useState('');
     const login = async (username: String, password: String) => {
         try {
-            const oauthData = await AuthClient.login(username, password)
-            setOauthToken(oauthData.token)
+            const oauthData = await AuthClient.login(username, password);
+            setOauthToken(oauthData.token);
         } catch (error: any) {
-            console.log(error)
-            console.log(error.message)
+            console.log(error);
+            console.log(error.message);
         }
-    }
+    };
     const logout = async (oauthToken: String) => {
-        await AuthClient.logout(oauthToken)
-        setOauthToken('')
-    }
+        await AuthClient.logout(oauthToken);
+        setOauthToken('');
+    };
     return (
         <SafeAreaView>
             <TextInput
@@ -62,15 +62,15 @@ const App = () => {
             />
             <Button
                 title="Login"
-                onPress={() => { login(username, password) }}
+                onPress={() => { login(username, password); }}
             />
             <Button
                 title="Logout"
-                onPress={() => { logout(oauthToken) }}
+                onPress={() => { logout(oauthToken); }}
             />
             <Text>Oauth Token: {oauthToken}</Text>
         </SafeAreaView>
-    )
+    );
 };
 
 export default App;

@@ -1,5 +1,5 @@
 apply plugin: "com.android.application"
-
+apply plugin: 'com.google.protobuf'
 import com.android.build.OutputFile
 import org.apache.tools.ant.taskdefs.condition.Os
 
@@ -251,9 +251,13 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    //implementation 'com.google.protobuf:protobuf-lite:3.0.0'
+    implementation 'io.grpc:grpc-okhttp:1.50.2'
+    implementation 'io.grpc:grpc-protobuf-lite:1.50.2'
+    implementation 'io.grpc:grpc-stub:1.50.2'
+    compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // necessary for Java 9+
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
@@ -279,6 +283,51 @@ dependencies {
         implementation jscFlavor
     }
 }
+
+protobuf {
+    protoc {
+        // for apple m1, please add protoc_platform=osx-x86_64 in $HOME/.gradle/gradle.properties
+        if (project.hasProperty('protoc_platform')) {
+            artifact = "com.google.protobuf:protoc:3.21.7:${protoc_platform}"
+        } else {
+            artifact = "com.google.protobuf:protoc:3.21.7"
+        }
+    }
+
+    plugins {
+        javalite {
+            // The codegen for lite comes as a separate artifact
+            if (project.hasProperty('protoc_platform')) {
+                artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0:${protoc_platform}"
+            } else {
+                artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0"
+            }
+            //artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'
+        }
+        grpc {
+            if (project.hasProperty('protoc_platform')) {
+                artifact = "io.grpc:protoc-gen-grpc-java:1.50.2:${protoc_platform}"
+            } else {
+
+                artifact = "io.grpc:protoc-gen-grpc-java:1.50.2"
+            }
+        }
+
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                //remove java
+                java { option 'lite' }
+            }
+            task.plugins {
+                //javalite { }
+                grpc { option 'lite'}
+            }
+        }
+    }
+}
+
 
 if (isNewArchitectureEnabled()) {
     // If new architecture is enabled, we let you build RN from source

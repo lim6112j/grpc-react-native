@@ -1,9 +1,6 @@
 syntax = "proto3";
-option java_multiple_files = true;
-option java_package = "com.rngrpcapp";
-option java_outer_classname = "AuthServiceProto";
+package com.rngrpcapp;
 option objc_class_prefix = "AGS"; //authentication gRPC service
-package authService;
 message AccountCredentials {
   string username = 1;
   string password = 2;
