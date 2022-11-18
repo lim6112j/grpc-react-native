@@ -1,5 +1,21 @@
 * [gRPC with react-native IOS 참조](https://gaitatzis.medium.com/building-a-grpc-server-in-nodejs-e3ccdd93a0f)
 * [gRPC with react-native android 참조](https://medium.com/xebia/first-steps-in-grpc-bindings-for-react-native-32bb97115eed)
+* grpc-swift install - 프로젝트 폴더에 아래 명령을 수행해서 proto generator 를 설치한다.(ios에서 proto 기반 swift generation에 필요)
+
+        $ git clone https://github.com/grpc/grpc-swift
+        $ cd grpc-swift
+        $ make plugins
+        $ cp .build/release/protoc-gen-swift .build/release/protoc-gen-grpc-swift /usr/local/bin
+
+* compile proto file(ios에서 사용함)
+
+        protoc authService.proto \
+        --grpc-swift_opt=Client=true,Server=false \
+        --grpc-swift_out=ios \
+        --proto_path=../proto \
+        --swift_opt=Visibility=Public \
+        --swift_out=ios
+
 * how to run IOS
   1. download zip file
   1. cd node folder
@@ -44,14 +60,6 @@
   
 
 
-* compile proto file
-
-        protoc authService.proto \
-        --grpc-swift_opt=Client=true,Server=false \
-        --grpc-swift_out=ios \
-        --proto_path=../proto \
-        --swift_opt=Visibility=Public \
-        --swift_out=ios
 
 * how to run
 
