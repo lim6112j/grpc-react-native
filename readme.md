@@ -40,6 +40,12 @@
   1. in terminal : yarn or npm install
   1. npx react-native run-android
   1. check alert ciel companyd
+  1. check the server ip : GRPCPackage.java 
+  
+        public class GRPCPackage implements ReactPackage {
+            public static final String HOST = "172.30.1.48"; // your local ip
+            public static final int PORT = 50051;
+            public static final boolean USE_PLAINTEXT = true;
 
 * how to change proto file - ios 
   1. compile protoc files (아래 참조)
