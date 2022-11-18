@@ -36,7 +36,7 @@ public class ResponseTask extends AsyncTask<Void, Void, ResponseOrException> {
     protected ResponseOrException doInBackground(Void... nothing) {
         try {
             channel = ManagedChannelBuilder.forAddress(HOST, PORT).usePlaintext().build();
-           return new ResponseOrException(getResponse());
+           return new ResponseOrException(getResponse(channel));
         } catch (Exception e) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
@@ -62,9 +62,9 @@ public class ResponseTask extends AsyncTask<Void, Void, ResponseOrException> {
         }
     }
 
-    protected WritableMap getResponse(){
+    protected WritableMap getResponse(ManagedChannel channel){
         HelloRequest request = HelloRequest.newBuilder().setName(requestMap.getString("name")).build();
-        GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(getChannel());
+        GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(channel);
         HelloReply reply = stub.sayHello(request);
         WritableMap response = new WritableNativeMap();
         response.putString("message", reply.getMessage());

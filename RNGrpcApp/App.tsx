@@ -22,7 +22,7 @@ import {
 
 async function doRpc() {
     try {
-        const response = await Greeter.sayHello({ name: 'ben lim' });
+        const response = await Greeter.sayHello({ name: 'Ciel Company' });
         Alert.alert('android grpc response', response.message);
     } catch (e: any) {
         Alert.alert('error', e.message);
