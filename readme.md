@@ -16,6 +16,9 @@
         --swift_opt=Visibility=Public \
         --swift_out=ios
 
+* ios : podfile 세팅 체크
+* android : build.gradle(project), build.gradle(app), settings.gradle(project) 체크
+ 
 * how to run IOS
   1. download zip file
   1. cd node folder
