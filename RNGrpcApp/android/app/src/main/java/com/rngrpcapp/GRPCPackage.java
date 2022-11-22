@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class GRPCPackage implements ReactPackage {
-    public static final String HOST = "172.30.1.48";
+    public static final String HOST = "192.168.0.110";
     public static final int PORT = 50051;
     public static final boolean USE_PLAINTEXT = true;
 

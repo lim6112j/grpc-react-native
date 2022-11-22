@@ -4,6 +4,7 @@
 
         $ git clone https://github.com/grpc/grpc-swift
         $ cd grpc-swift
+        $ git checkout 586000 (podfile grpc-swift version matching)
         $ make plugins
         $ cp .build/release/protoc-gen-swift .build/release/protoc-gen-grpc-swift /usr/local/bin
 
