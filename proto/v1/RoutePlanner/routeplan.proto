@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+option csharp_namespace = "Protos.v1.RoutePlanner";
+
+import "google/protobuf/timestamp.proto";   
+import "google/protobuf/duration.proto";   
+import "google/protobuf/empty.proto";   
+import "Protos/v1/Base/loc.proto";
+
+package routeplan;
+
+service RoutePlanner {
+  // find path, Eta of given O/D
+  rpc FindPath (FindPathRequest) returns (FindPathReply);
+  rpc FindMultiPath (FindMultiPathRequest) returns (FindMultiPathReply);
+  rpc GetPathEtaOfWaypoints(WaypointsWithSupply) returns (PathWithEtaPerWaypoint);
+}
+
+// rpc #1 단순 경로조회 (with 정류장ID)
+message FindPathRequest {
+  int32 region_code = 1;
+  string pick_station_id = 2;
+  string drop_station_id = 3;
+}
+
+message FindPathReply {		
+  int32 region_code = 1;
+  loc.Path path = 2;
+  double duration = 3;
+}
+
+// rpc #2 다중 경로조회 (with 정류장ID)
+message FindMultiPathRequest {
+  repeated FindPathRequest requests = 1;
+}
+
+message FindMultiPathReply {		
+  repeated FindPathReply replies = 1;
+}
+
+// rpc #3 경유지 목록에 대한 경로,ETA 조회
+message WaypointsWithSupply{	
+  // 필수 입력값
+  int32 region_code = 1;
+  string supply_id = 2;
+  repeated Waypoint waypoint_list = 3;
+
+  // 선택 입력값 (현재 미구현)
+  // 현재 RoutePlanner 자체적으로 차량 위치 조회 및 맵매칭 하여 사용.
+  loc.LngLat supply_lng_lat = 4;
+  // 외부에서 맵매칭시 입력
+  int32 supply_node_idx = 5;
+  // 경유지 도착하여 길 찾을때 차량이 도착한 경유지. 이 값이 존재하면 차량 위치를 대신하여 길찾기에 사용됨.
+  Waypoint arrived_waypoint = 7;
+  // 차량 현위치에서 출발할 시각 (default : DateTime.Now)
+  google.protobuf.Timestamp start_time_at_car = 6;
+
+  message Waypoint{
+    
+	// 통신 양측이 동일한 도로데이터 정보를 기준으로 해야함.
+    int32 node_idx = 1 [deprecated = true];
+
+    // 검토필요 : RoutePlanner가 정류장 정보를 알고 있다는 전제하에
+    // 내부적으로 station_id =>node_idx로 매핑하여 경로탐색.
+	string station_id = 2; 
+
+	loc.LngLat station_lng_lat = 3 [deprecated = true]; 
+  }
+}
+
+message PathWithEtaPerWaypoint{
+  // 경로 [ 차량 -> 경유지 1, 경유지1 -> 경유지 2, ...]
+  repeated loc.Path path_list = 1;
+  // 소요시간(초) [ 차량 -> 경유지 1, 경유지1 -> 경유지 2, ...]
+  repeated double duration_list = 2;
+  // 예정도착시각 [ 경유지 1, 경유지 2, ...]
+  repeated google.protobuf.Timestamp eta_list = 3;
+}
+
+// Service #. 정류장 곧 도착 확인 (자체 루프로 구현예정. gRpc로 호출시 외부에서 루프가동.)
+//service ArriveSoonMonitor{
+//  rpc ReportSupplyLocForArrivalCheck(ArrivalCheckInfo) returns (google.protobuf.Empty);
+//}
+//
+//message ArrivalCheckInfo
+//{
+//  string supply_id = 1;
+//  LngLat supply_lng_lat = 2;
+//}

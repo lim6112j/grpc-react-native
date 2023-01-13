@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+option csharp_namespace = "Protos.v1.Dispatcher";
+
+// 자료형 https://developers.google.com/protocol-buffers/docs/reference/csharp
+// import "google/protobuf/duration.proto";  // 시간
+import "google/protobuf/timestamp.proto";    // 시각
+import "google/protobuf/empty.proto";        // 빈 응답의 명시
+import "Protos/v1/Base/loc.proto";
+import "Protos/v1/Dispatcher/supply.proto";
+
+package dispatch;
+
+// The Dispatching service definition.
+service Dispatcher{
+  // Status AlreadyExists: there is a demand with the same id
+  // Status NotFound: there is no region with the given id
+  rpc SetDispatch (DispatchRequest) returns (DispatchReply);
+  // Status NotFound: there is no `region or demand` with the given id. check exception detail.
+  rpc CancelDispatch (DispatchCancelRequest) returns (DispatchCancelReply);
+  // -> API단의 기능으로 이동.
+  //rpc GetDispatchAfterInfo (DispatchAfterInfoRequest) returns (/*stream*/ DispatchAfterInfoReply);
+  rpc GetSupplyDispatchInfo(DispatchQueueRequest) returns (supply.Supply);
+}
+
+// rpc #1 : 배차요청
+message DispatchRequest {
+  string demand_id = 1;
+  // 요청자 기본사항
+  int32 user_id = 2;
+  int32 region_code = 3;
+  int32 item_count = 4;
+
+  // 정류장 ID 
+  int32 get_on_station_id = 5;
+  int32 get_off_station_id = 6;
+
+  google.protobuf.Timestamp request_time = 7;
+}
+
+message DispatchReply {
+  // 고유 패킷 
+  string demand_id = 1;
+  int32 demand_state = 2;
+  string matched_supply_id = 3;
+
+  supply.Supply supply_info = 4; 
+}
+
+// rpc #2 : 배차취소 
+message DispatchCancelRequest {
+  string demand_id = 1;
+  int32 region_code = 2;
+}
+// 취소후 변경사항을 서비스레이어에 적용하기 위해서는 필요함.
+message DispatchCancelReply{
+  // 취소한 demand가 이용중이던 차량
+  string supply_id = 1;
+  supply.Supply supply_info = 2;
+}
+
+// rpc #4 차량 배차정보(경유지) 조회
+message DispatchQueueRequest {
+  string supply_id = 1; 
+  int32 region_code = 2;
+}
+// 응답 메시지 Supply -> supply.proto
