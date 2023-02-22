@@ -1,14 +1,14 @@
-ï»¿syntax = "proto3";
+syntax = "proto3";
 
-import "google/protobuf/timestamp.proto";    // ì‹œê°
+import "google/protobuf/timestamp.proto";    // ½Ã°¢
 import "Protos/v1/Base/loc.proto";
 
 option csharp_namespace = "Protos.v1.Redis";
 
 package redis;
 
-// #0 ìœ ì €,ì°¨ëŸ‰ ê¸°ë³¸ìƒíƒœ ë©”ì‹œì§€
-//Redis ì €ì¥ êµ¬ì¡°
+// #0 À¯Àú,Â÷·® ±âº»»óÅÂ ¸Ş½ÃÁö
+//Redis ÀúÀå ±¸Á¶
 message UserState
 {
     int32 user_idx = 1;
@@ -18,83 +18,83 @@ message UserState
 	string enqueue_event_time = 5;
 }
 
-//Redis ì €ì¥êµ¬ì¡°
+//Redis ÀúÀå±¸Á¶
 message SupplyState{
     int32 supply_idx = 1;
 	int32 state = 2;	
 	string enqueue_event_time = 3;	
 }
 
-//Redis ì €ì¥êµ¬ì¡°
+//Redis ÀúÀå±¸Á¶
 message SupplyLocation{    
 	int32 supply_idx = 1;
 	string device_id = 2;
 	loc.Loc loc = 3;
 }
 
-// ì£¼ì–´ì§„ ê²½ë¡œ ìœ„ì˜ ì°¨ëŸ‰ì¸¡ìœ„ ë³´ì •ê°’
+// ÁÖ¾îÁø °æ·Î À§ÀÇ Â÷·®ÃøÀ§ º¸Á¤°ª
 message SupplyLocationMatched{
 	int32 supply_id = 1;
-	// SupplyLocationì—ì„œ ìˆ˜ì§‘í•œ ì›ë³¸ ì¸¡ìœ„ì¢Œí‘œ 
+	// SupplyLocation¿¡¼­ ¼öÁıÇÑ ¿øº» ÃøÀ§ÁÂÇ¥ 
 	loc.LngLat raw_lng_lat = 2;
-	// ê¸°ì¤€ì´ ëœ ê²½ë¡œ(SupplyWaypointPath)ì˜ ë²„ì „
+	// ±âÁØÀÌ µÈ °æ·Î(SupplyWaypointPath)ÀÇ ¹öÀü
 	google.protobuf.Timestamp path_version = 3;
-	// í•´ë‹¹ ë©”ì‹œì§€ê°€ ì—†ì„ ì‹œ ì›ë³¸ ì¢Œí‘œë§Œ ì‹ ë¢°ê°€ëŠ¥.
-	// ì°¾ì§€ ëª»í–ˆì„ë•Œ ê¸°ì¡´ì˜ ë§ˆì§€ë§‰ ê°’ì„ ì „ë‹¬í•´ì•¼í• ì§€ ë¯¸ì •.
-	// ì ì ˆí•œ ìœ íš¨ì„± íŒë‹¨ ë¡œì§ì´ ì¶”ê°€ë ë•Œê¹Œì§€ëŠ” ê²½ë¡œê°€ ì¡´ì¬í•˜ëŠ” í•œ í•­ìƒ true.
+	// ÇØ´ç ¸Ş½ÃÁö°¡ ¾øÀ» ½Ã ¿øº» ÁÂÇ¥¸¸ ½Å·Ú°¡´É.
+	// Ã£Áö ¸øÇßÀ»¶§ ±âÁ¸ÀÇ ¸¶Áö¸· °ªÀ» Àü´ŞÇØ¾ßÇÒÁö ¹ÌÁ¤.
+	// ÀûÀıÇÑ À¯È¿¼º ÆÇ´Ü ·ÎÁ÷ÀÌ Ãß°¡µÉ¶§±îÁö´Â °æ·Î°¡ Á¸ÀçÇÏ´Â ÇÑ Ç×»ó true.
 	Matched match_result = 4;
 	message Matched{
-	// SupplyWaypointPathsì˜ ê²½ë¡œë¥¼ ê¸°ì¤€ìœ¼ë¡œí•œ ê°ê°ì˜ ìƒ‰ì¸ê°’.	í˜„ì¬ path_indexëŠ” 0(ì°¨ëŸ‰->ì²«ë²ˆì§¸ ê²½ìœ ì§€)ìœ¼ë¡œ ê³ ì •.
+	// SupplyWaypointPathsÀÇ °æ·Î¸¦ ±âÁØÀ¸·ÎÇÑ °¢°¢ÀÇ »öÀÎ°ª.	ÇöÀç path_index´Â 0(Â÷·®->Ã¹¹øÂ° °æÀ¯Áö)À¸·Î °íÁ¤.
 	int32 path_index = 1;
 	int32 link_index = 2;
 	int32 lng_lat_index = 3;
-	// ê²½ë¡œìƒì— í¬í•¨ë˜ë„ë¡ ë³´ì •ëœ ì¢Œí‘œ. ë Œë”ë§ ì‹œ ê²½ë¡œë¥¼ ì´ ì¢Œí‘œë¶€í„° ê·¸ë¦¬ë©´ ë©ë‹ˆë‹¤.
+	// °æ·Î»ó¿¡ Æ÷ÇÔµÇµµ·Ï º¸Á¤µÈ ÁÂÇ¥. ·»´õ¸µ ½Ã °æ·Î¸¦ ÀÌ ÁÂÇ¥ºÎÅÍ ±×¸®¸é µË´Ï´Ù.
 	loc.LngLat adjusted_lng_lat = 4;
 	}	
 }
 
-// #1 Waypoint ê°±ì‹  ë©”ì‹œì§€
+// #1 Waypoint °»½Å ¸Ş½ÃÁö
 
-// ê¸°ì¡´ api ì‘ë‹µ ì–‘ì‹ í˜¸í™˜ (userApp)
-//message SupplyWaypoints
-//{
-//	repeated SupplyWaypoint supply_waypoint = 1;
-//	google.protobuf.Timestamp get_date = 2;
-//}
+// ±âÁ¸ api ÀÀ´ä ¾ç½Ä È£È¯ (userApp)
+message SupplyWaypoints
+{
+	repeated SupplyWaypoint supply_waypoint = 1;
+	google.protobuf.Timestamp get_date = 2;
+}
 
-// ë³€ê²½ì•ˆ
+// º¯°æ¾È
 message SupplyWaypointUpdate {	
 	int32 supply_id = 1;																		
-	google.protobuf.Timestamp waypoint_version = 2;																// ìŠ¤ëƒ…ìƒ· ë°œìƒì‹œê° yyyy-MM-dd hh:mm:ss.ffffff ( Timestamp í¬ë§· + UTC ë¡œ ì „í™˜í•˜ëŠ” í¸ì´ ë°”ëŒì§ )
-	WaypointActionType action = 3;																// ê²½ìœ ì§€ ê°±ì‹ ì„ ì¼ìœ¼í‚¨ ì•¡ì…˜
+	google.protobuf.Timestamp waypoint_version = 2;																// ½º³À¼¦ ¹ß»ı½Ã°¢ yyyy-MM-dd hh:mm:ss.ffffff ( Timestamp Æ÷¸Ë + UTC ·Î ÀüÈ¯ÇÏ´Â ÆíÀÌ ¹Ù¶÷Á÷ )
+	WaypointActionType action = 3;																// °æÀ¯Áö °»½ÅÀ» ÀÏÀ¸Å² ¾×¼Ç
 
-	oneof action_detail {																		// ì•¡ì…˜ë³„ ìƒì„¸ì •ë³´
+	oneof action_detail {																		// ¾×¼Çº° »ó¼¼Á¤º¸
 		DispatchDetail dispatch_detail = 4;
 		ArrivalDetail arrival_detail = 5;
 		CancelDetail cancel_detail = 6;
 	}
-	repeated SupplyWaypoint supply_waypoint_list = 7;											// ê²½ìœ ì§€ ëª©ë¡ ìŠ¤ëƒ…ìƒ· - ê°±ì‹  í›„ 
+	repeated SupplyWaypoint supply_waypoint_list = 7;											// °æÀ¯Áö ¸ñ·Ï ½º³À¼¦ - °»½Å ÈÄ 
 
-	enum WaypointActionType{																	// ê²½ìœ ì§€ ê°±ì‹  ì•¡ì…˜ ëª©ë¡
+	enum WaypointActionType{																	// °æÀ¯Áö °»½Å ¾×¼Ç ¸ñ·Ï
 		DISPATCH = 0;
 		ARRIVAL = 1;
 		CANCEL = 2;
 	}
-	message DispatchDetail{																		// ì‹ ê·œë°°ì°¨ì ê²½ìœ ì§€ ì¸ë±ìŠ¤ (í˜„ ìŠ¤ëƒ…ìƒ· ê¸°ì¤€)
+	message DispatchDetail{																		// ½Å±Ô¹èÂ÷ÀÚ °æÀ¯Áö ÀÎµ¦½º (Çö ½º³À¼¦ ±âÁØ)
 		string demand_id = 1;
 		int32 pick_waypoint_sequence = 2;
 		int32 drop_waypoint_sequence = 3;
 	}
 	message ArrivalDetail{
-		SupplyWaypoint removed_waypoint = 1;													// ë„ì°©ì²˜ë¦¬ ê°„ ì œê±°ëœ ì •ë¥˜ì¥ì˜ ìŠ¹í•˜ì°¨ ì •ë³´ (ì›ë³¸ì„ ê·¸ëŒ€ë¡œ copyí•˜ì—¬ ë…¸ì‡¼ ìŠ¹ê° í¬í•¨)
-		repeated DemandStationInfoFromPrev noshow_dropinfo_list = 2;							// ë…¸ì‡¼ ì£¼ë¬¸ë“¤ì˜ ID ë° í•˜ì°¨ì§€
+		SupplyWaypoint removed_waypoint = 1;													// µµÂøÃ³¸® °£ Á¦°ÅµÈ Á¤·ùÀåÀÇ ½ÂÇÏÂ÷ Á¤º¸ (¿øº»À» ±×´ë·Î copyÇÏ¿© ³ë¼î ½Â°´ Æ÷ÇÔ)
+		repeated DemandStationInfoFromPrev noshow_dropinfo_list = 2;							// ³ë¼î ÁÖ¹®µéÀÇ ID ¹× ÇÏÂ÷Áö
 	}
 	message CancelDetail {
 		string demand_id = 1;
-		DemandStationInfoFromPrev canceled_info_pick = 2;										// ì£¼ë¬¸ì·¨ì†Œ ìŠ¹ì°¨ì§€ ì •ë³´
-		DemandStationInfoFromPrev canceled_info_drop = 3;										// ì£¼ë¬¸ì·¨ì†Œ í•˜ì°¨ì§€ ì •ë³´
+		DemandStationInfoFromPrev canceled_info_pick = 2;										// ÁÖ¹®Ãë¼Ò ½ÂÂ÷Áö Á¤º¸
+		DemandStationInfoFromPrev canceled_info_drop = 3;										// ÁÖ¹®Ãë¼Ò ÇÏÂ÷Áö Á¤º¸
 	}	
-	message DemandStationInfoFromPrev {															// ì§ì „ ë²„ì „ supply_waypoint_listì—ì„œ ê°€ì ¸ì˜¨ ë°ì´í„° ê³µí†µì–‘ì‹
+	message DemandStationInfoFromPrev {															// Á÷Àü ¹öÀü supply_waypoint_list¿¡¼­ °¡Á®¿Â µ¥ÀÌÅÍ °øÅë¾ç½Ä
 		string demand_id = 1;
 		int32 stop_idx = 2;
 		int32 waypoint_seq = 3;																	// from previous snapshot.
@@ -124,35 +124,38 @@ message SupplyWaypoint{
 		REST = 4;	
 		RELOCATION = 5;
 		PREDICTION = 6;
+		ROTATION = 7; 
+        REPAIR = 8;
+        ROUTE = 9;					// »çÀüÀÔ·ÂµÈ ³ë¼± °æÀ¯Áö
 	}
 }
 
-// #2 Path ê°±ì‹  ë©”ì‹œì§€
+// #2 Path °»½Å ¸Ş½ÃÁö
 
-// ê¸°ì¡´ api í˜¸í™˜ìœ„í•´ ìœ ì§€ (userApp)
-//message SupplyWaypointPaths
-//{
-//	repeated SupplyWaypointPath supply_waypoint_path = 1;
-//	google.protobuf.Timestamp get_date = 2;
-//}
+// ±âÁ¸ api È£È¯À§ÇØ À¯Áö (userApp)
+message SupplyWaypointPaths
+{
+	repeated SupplyWaypointPath supply_waypoint_path = 1;
+	google.protobuf.Timestamp get_date = 2;
+}
 
-// ë³€ê²½ì•ˆ
+// º¯°æ¾È
 message SupplyWaypointPathUpdate
 {
 	int32 supply_id = 1;
 	google.protobuf.Timestamp path_version = 2;
-	google.protobuf.Timestamp waypoint_version = 3; // ê²½ë¡œ ê³„ì‚°ì‹œ ì‚¬ìš©ëœ ê²½ìœ ì§€ ë²„ì „ (join keyì˜ ì¼ë¶€)
+	google.protobuf.Timestamp waypoint_version = 3; // °æ·Î °è»ê½Ã »ç¿ëµÈ °æÀ¯Áö ¹öÀü (join keyÀÇ ÀÏºÎ)
 	PathActionType action = 4;
 
 	repeated SupplyWaypointPath supply_waypoint_path_list = 7;
 
 	enum PathActionType{
-		WAYPOINT_UPDATE = 0;	// ê²½ìœ ì§€ ë³€ê²½ìœ¼ë¡œ ì¸í•œ ê°±ì‹ 
-		OFFTRACK = 1;			// ì£¼í–‰ê²½ë¡œ ì´íƒˆë¡œ ì¸í•œ ê°±ì‹ 
+		WAYPOINT_UPDATE = 0;	// °æÀ¯Áö º¯°æÀ¸·Î ÀÎÇÑ °»½Å
+		OFFTRACK = 1;			// ÁÖÇà°æ·Î ÀÌÅ»·Î ÀÎÇÑ °»½Å
 	}
 }
 
-// TODO: path ì™¸ì— ì „ë¶€ ì¤‘ë³µ ë°ì´í„°. ì•±ê³¼ì˜ í˜¸í™˜ì„±ì„ ìœ„í•´ ì–‘ì‹ ìœ ì§€í•˜ê³  ì°¨í›„ í•„ìš”ì— ë”°ë¼ ì¤‘ë³µì œê±°
+// TODO: path ¿Ü¿¡ ÀüºÎ Áßº¹ µ¥ÀÌÅÍ. ¾Û°úÀÇ È£È¯¼ºÀ» À§ÇØ ¾ç½Ä À¯ÁöÇÏ°í Â÷ÈÄ ÇÊ¿ä¿¡ µû¶ó Áßº¹Á¦°Å
 message SupplyWaypointPath{
 	int32 supply_id = 1;
 	int32 waypoint_seq = 2;
@@ -163,28 +166,28 @@ message SupplyWaypointPath{
 	//repeated int32 drop_off_user_id_list = 7;
 }
 
-// #3 ETA ê°±ì‹  ë©”ì‹œì§€
-// ê¸°ì¡´ ì–‘ì‹ ìœ ì§€
-//message SupplyWaypointEtas
-//{
-//	repeated SupplyWaypointEta supply_waypoint_eta = 1;	
-//	google.protobuf.Timestamp get_date = 2;
-//}
+// #3 ETA °»½Å ¸Ş½ÃÁö
+// ±âÁ¸ ¾ç½Ä À¯Áö
+message SupplyWaypointEtas
+{
+	repeated SupplyWaypointEta supply_waypoint_eta = 1;	
+	google.protobuf.Timestamp get_date = 2;
+}
 
-// ë³€ê²½ì•ˆ
+// º¯°æ¾È
 message SupplyWaypointEtaUpdate
 {
 	int32 supply_id = 1;
 	google.protobuf.Timestamp eta_version = 2;
-	google.protobuf.Timestamp waypoint_version = 3; // ê²½ë¡œ ê³„ì‚°ì‹œ ì‚¬ìš©ëœ ê²½ìœ ì§€ ë²„ì „ (join keyì˜ ì¼ë¶€)
+	google.protobuf.Timestamp waypoint_version = 3; // °æ·Î °è»ê½Ã »ç¿ëµÈ °æÀ¯Áö ¹öÀü (join keyÀÇ ÀÏºÎ)
 	EtaActionType action = 4;
 
 	repeated SupplyWaypointEta supply_waypoint_eta_list = 7;
 
 	enum EtaActionType{
-		WAYPOINT_UPDATE = 0;	// ê²½ìœ ì§€ ë³€ê²½ìœ¼ë¡œ ì¸í•œ ê°±ì‹ 
-		PATH_OFFTRACK = 1;			// ì£¼í–‰ê²½ë¡œ ì´íƒˆë¡œ ì¸í•œ ê²½ë¡œ ì¬ê³„ì‚° í›„ ê°±ì‹ 
-		ETA_OFFTRACK = 2;			// ê¸°ì¡´ ETA ëŒ€ë¹„ ì°¨ì´ê°€ ì‹¬í• ë•Œ ê°±ì‹ 
+		WAYPOINT_UPDATE = 0;	// °æÀ¯Áö º¯°æÀ¸·Î ÀÎÇÑ °»½Å
+		PATH_OFFTRACK = 1;			// ÁÖÇà°æ·Î ÀÌÅ»·Î ÀÎÇÑ °æ·Î Àç°è»ê ÈÄ °»½Å
+		ETA_OFFTRACK = 2;			// ±âÁ¸ ETA ´ëºñ Â÷ÀÌ°¡ ½ÉÇÒ¶§ °»½Å
 	}
 }
 

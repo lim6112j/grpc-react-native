@@ -16,7 +16,7 @@ service RoutePlanner {
   rpc GetPathEtaOfWaypoints(WaypointsWithSupply) returns (PathWithEtaPerWaypoint);
 }
 
-// rpc #1 ë‹¨ìˆœ ê²½ë¡œì¡°íšŒ (with ì •ë¥˜ì¥ID)
+// rpc #1 ´Ü¼ø °æ·ÎÁ¶È¸ (with Á¤·ùÀåID)
 message FindPathRequest {
   int32 region_code = 1;
   string pick_station_id = 2;
@@ -29,7 +29,7 @@ message FindPathReply {
   double duration = 3;
 }
 
-// rpc #2 ë‹¤ì¤‘ ê²½ë¡œì¡°íšŒ (with ì •ë¥˜ì¥ID)
+// rpc #2 ´ÙÁß °æ·ÎÁ¶È¸ (with Á¤·ùÀåID)
 message FindMultiPathRequest {
   repeated FindPathRequest requests = 1;
 }
@@ -38,30 +38,30 @@ message FindMultiPathReply {
   repeated FindPathReply replies = 1;
 }
 
-// rpc #3 ê²½ìœ ì§€ ëª©ë¡ì— ëŒ€í•œ ê²½ë¡œ,ETA ì¡°íšŒ
+// rpc #3 °æÀ¯Áö ¸ñ·Ï¿¡ ´ëÇÑ °æ·Î,ETA Á¶È¸
 message WaypointsWithSupply{	
-  // í•„ìˆ˜ ì…ë ¥ê°’
+  // ÇÊ¼ö ÀÔ·Â°ª
   int32 region_code = 1;
   string supply_id = 2;
   repeated Waypoint waypoint_list = 3;
 
-  // ì„ íƒ ì…ë ¥ê°’ (í˜„ì¬ ë¯¸êµ¬í˜„)
-  // í˜„ì¬ RoutePlanner ìì²´ì ìœ¼ë¡œ ì°¨ëŸ‰ ìœ„ì¹˜ ì¡°íšŒ ë° ë§µë§¤ì¹­ í•˜ì—¬ ì‚¬ìš©.
+  // ¼±ÅÃ ÀÔ·Â°ª (ÇöÀç ¹Ì±¸Çö)
+  // ÇöÀç RoutePlanner ÀÚÃ¼ÀûÀ¸·Î Â÷·® À§Ä¡ Á¶È¸ ¹× ¸Ê¸ÅÄª ÇÏ¿© »ç¿ë.
   loc.LngLat supply_lng_lat = 4;
-  // ì™¸ë¶€ì—ì„œ ë§µë§¤ì¹­ì‹œ ì…ë ¥
+  // ¿ÜºÎ¿¡¼­ ¸Ê¸ÅÄª½Ã ÀÔ·Â
   int32 supply_node_idx = 5;
-  // ê²½ìœ ì§€ ë„ì°©í•˜ì—¬ ê¸¸ ì°¾ì„ë•Œ ì°¨ëŸ‰ì´ ë„ì°©í•œ ê²½ìœ ì§€. ì´ ê°’ì´ ì¡´ì¬í•˜ë©´ ì°¨ëŸ‰ ìœ„ì¹˜ë¥¼ ëŒ€ì‹ í•˜ì—¬ ê¸¸ì°¾ê¸°ì— ì‚¬ìš©ë¨.
+  // °æÀ¯Áö µµÂøÇÏ¿© ±æ Ã£À»¶§ Â÷·®ÀÌ µµÂøÇÑ °æÀ¯Áö. ÀÌ °ªÀÌ Á¸ÀçÇÏ¸é Â÷·® À§Ä¡¸¦ ´ë½ÅÇÏ¿© ±æÃ£±â¿¡ »ç¿ëµÊ.
   Waypoint arrived_waypoint = 7;
-  // ì°¨ëŸ‰ í˜„ìœ„ì¹˜ì—ì„œ ì¶œë°œí•  ì‹œê° (default : DateTime.Now)
+  // Â÷·® ÇöÀ§Ä¡¿¡¼­ Ãâ¹ßÇÒ ½Ã°¢ (default : DateTime.Now)
   google.protobuf.Timestamp start_time_at_car = 6;
 
   message Waypoint{
     
-	// í†µì‹  ì–‘ì¸¡ì´ ë™ì¼í•œ ë„ë¡œë°ì´í„° ì •ë³´ë¥¼ ê¸°ì¤€ìœ¼ë¡œ í•´ì•¼í•¨.
+	// Åë½Å ¾çÃøÀÌ µ¿ÀÏÇÑ µµ·Îµ¥ÀÌÅÍ Á¤º¸¸¦ ±âÁØÀ¸·Î ÇØ¾ßÇÔ.
     int32 node_idx = 1 [deprecated = true];
 
-    // ê²€í† í•„ìš” : RoutePlannerê°€ ì •ë¥˜ì¥ ì •ë³´ë¥¼ ì•Œê³  ìˆë‹¤ëŠ” ì „ì œí•˜ì—
-    // ë‚´ë¶€ì ìœ¼ë¡œ station_id =>node_idxë¡œ ë§¤í•‘í•˜ì—¬ ê²½ë¡œíƒìƒ‰.
+    // °ËÅäÇÊ¿ä : RoutePlanner°¡ Á¤·ùÀå Á¤º¸¸¦ ¾Ë°í ÀÖ´Ù´Â ÀüÁ¦ÇÏ¿¡
+    // ³»ºÎÀûÀ¸·Î station_id =>node_idx·Î ¸ÅÇÎÇÏ¿© °æ·ÎÅ½»ö.
 	string station_id = 2; 
 
 	loc.LngLat station_lng_lat = 3 [deprecated = true]; 
@@ -69,15 +69,15 @@ message WaypointsWithSupply{
 }
 
 message PathWithEtaPerWaypoint{
-  // ê²½ë¡œ [ ì°¨ëŸ‰ -> ê²½ìœ ì§€ 1, ê²½ìœ ì§€1 -> ê²½ìœ ì§€ 2, ...]
+  // °æ·Î [ Â÷·® -> °æÀ¯Áö 1, °æÀ¯Áö1 -> °æÀ¯Áö 2, ...]
   repeated loc.Path path_list = 1;
-  // ì†Œìš”ì‹œê°„(ì´ˆ) [ ì°¨ëŸ‰ -> ê²½ìœ ì§€ 1, ê²½ìœ ì§€1 -> ê²½ìœ ì§€ 2, ...]
+  // ¼Ò¿ä½Ã°£(ÃÊ) [ Â÷·® -> °æÀ¯Áö 1, °æÀ¯Áö1 -> °æÀ¯Áö 2, ...]
   repeated double duration_list = 2;
-  // ì˜ˆì •ë„ì°©ì‹œê° [ ê²½ìœ ì§€ 1, ê²½ìœ ì§€ 2, ...]
+  // ¿¹Á¤µµÂø½Ã°¢ [ °æÀ¯Áö 1, °æÀ¯Áö 2, ...]
   repeated google.protobuf.Timestamp eta_list = 3;
 }
 
-// Service #. ì •ë¥˜ì¥ ê³§ ë„ì°© í™•ì¸ (ìì²´ ë£¨í”„ë¡œ êµ¬í˜„ì˜ˆì •. gRpcë¡œ í˜¸ì¶œì‹œ ì™¸ë¶€ì—ì„œ ë£¨í”„ê°€ë™.)
+// Service #. Á¤·ùÀå °ğ µµÂø È®ÀÎ (ÀÚÃ¼ ·çÇÁ·Î ±¸Çö¿¹Á¤. gRpc·Î È£Ãâ½Ã ¿ÜºÎ¿¡¼­ ·çÇÁ°¡µ¿.)
 //service ArriveSoonMonitor{
 //  rpc ReportSupplyLocForArrivalCheck(ArrivalCheckInfo) returns (google.protobuf.Empty);
 //}

@@ -12,15 +12,19 @@ option csharp_namespace = "Protos.v1.FrontEnd";
 
 package frontend;
 
-service FrontEnd{
-	rpc GetUserState(UserStateRequest) returns (stream UserStateResponse);
+service UserService{
+	rpc GetUserState(google.protobuf.Empty) returns (stream UserStateResponse);
+}
+
+service SupplyService{
 	rpc GetSupplyState(google.protobuf.Empty) returns (stream SupplyStateResponse);
 	rpc SetSupplyLocation(stream SupplyLocationRequest) returns (google.protobuf.Empty);
+    rpc GetSupplyLocation(stream GetSupplyLocationRequest) returns (SupplyLocationResponse);
+}
 
-    rpc GetSupplyLocation(SupplyLocationRequest) returns (stream SupplyLocationResponse);
-	
-	rpc SetUserState(redis.UserState) returns (google.protobuf.Empty);
-	rpc SetSupplyState(redis.SupplyState) returns (google.protobuf.Empty);
+service FrontEnd{
+	//rpc SetUserState(redis.UserState) returns (google.protobuf.Empty);
+	//rpc SetSupplyState(redis.SupplyState) returns (google.protobuf.Empty);
 	
 	//rpc SetSupplyWaypoint(supply.Supply) returns (google.protobuf.Empty);
 	//rpc SetSupplyWaypointEta(redis.SupplyWaypointEtas) returns (google.protobuf.Empty);
@@ -28,7 +32,7 @@ service FrontEnd{
 
 	rpc SetDispatch(FrontEndDispatchRequest) returns (google.protobuf.Empty);
 	rpc SetDispatchCancel(SetDispatchCancelRequest) returns (google.protobuf.Empty);
-	rpc SetArrivalWaypoint(SetArrivalWaypointRequest) returns (google.protobuf.Empty);	
+	//rpc SetArrivalWaypoint(SetArrivalWaypointRequest) returns (google.protobuf.Empty);	
 
 }
 
@@ -67,7 +71,7 @@ message UserStateWithInfo
 
 }
 
-message SupplyStateRequest{
+message GetSupplyLocationRequest{
 	int32 supply_idx = 1;
 }
 

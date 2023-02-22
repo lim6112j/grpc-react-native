@@ -2,10 +2,10 @@ syntax = "proto3";
 
 option csharp_namespace = "Protos.v1.Dispatcher";
 
-// ìžë£Œí˜• https://developers.google.com/protocol-buffers/docs/reference/csharp
-// import "google/protobuf/duration.proto";  // ì‹œê°„
-import "google/protobuf/timestamp.proto";    // ì‹œê°
-import "google/protobuf/empty.proto";        // ë¹ˆ ì‘ë‹µì˜ ëª…ì‹œ
+// ÀÚ·áÇü https://developers.google.com/protocol-buffers/docs/reference/csharp
+// import "google/protobuf/duration.proto";  // ½Ã°£
+import "google/protobuf/timestamp.proto";    // ½Ã°¢
+import "google/protobuf/empty.proto";        // ºó ÀÀ´äÀÇ ¸í½Ã
 import "Protos/v1/Base/loc.proto";
 import "Protos/v1/Dispatcher/supply.proto";
 
@@ -18,20 +18,20 @@ service Dispatcher{
   rpc SetDispatch (DispatchRequest) returns (DispatchReply);
   // Status NotFound: there is no `region or demand` with the given id. check exception detail.
   rpc CancelDispatch (DispatchCancelRequest) returns (DispatchCancelReply);
-  // -> APIë‹¨ì˜ ê¸°ëŠ¥ìœ¼ë¡œ ì´ë™.
+  // -> API´ÜÀÇ ±â´ÉÀ¸·Î ÀÌµ¿.
   //rpc GetDispatchAfterInfo (DispatchAfterInfoRequest) returns (/*stream*/ DispatchAfterInfoReply);
   rpc GetSupplyDispatchInfo(DispatchQueueRequest) returns (supply.Supply);
 }
 
-// rpc #1 : ë°°ì°¨ìš”ì²­
+// rpc #1 : ¹èÂ÷¿äÃ»
 message DispatchRequest {
   string demand_id = 1;
-  // ìš”ì²­ìž ê¸°ë³¸ì‚¬í•­
+  // ¿äÃ»ÀÚ ±âº»»çÇ×
   int32 user_id = 2;
   int32 region_code = 3;
   int32 item_count = 4;
 
-  // ì •ë¥˜ìž¥ ID 
+  // Á¤·ùÀå ID 
   int32 get_on_station_id = 5;
   int32 get_off_station_id = 6;
 
@@ -39,7 +39,7 @@ message DispatchRequest {
 }
 
 message DispatchReply {
-  // ê³ ìœ  íŒ¨í‚· 
+  // °íÀ¯ ÆÐÅ¶ 
   string demand_id = 1;
   int32 demand_state = 2;
   string matched_supply_id = 3;
@@ -47,21 +47,21 @@ message DispatchReply {
   supply.Supply supply_info = 4; 
 }
 
-// rpc #2 : ë°°ì°¨ì·¨ì†Œ 
+// rpc #2 : ¹èÂ÷Ãë¼Ò 
 message DispatchCancelRequest {
   string demand_id = 1;
   int32 region_code = 2;
 }
-// ì·¨ì†Œí›„ ë³€ê²½ì‚¬í•­ì„ ì„œë¹„ìŠ¤ë ˆì´ì–´ì— ì ìš©í•˜ê¸° ìœ„í•´ì„œëŠ” í•„ìš”í•¨.
+// Ãë¼ÒÈÄ º¯°æ»çÇ×À» ¼­ºñ½º·¹ÀÌ¾î¿¡ Àû¿ëÇÏ±â À§ÇØ¼­´Â ÇÊ¿äÇÔ.
 message DispatchCancelReply{
-  // ì·¨ì†Œí•œ demandê°€ ì´ìš©ì¤‘ì´ë˜ ì°¨ëŸ‰
+  // Ãë¼ÒÇÑ demand°¡ ÀÌ¿ëÁßÀÌ´ø Â÷·®
   string supply_id = 1;
   supply.Supply supply_info = 2;
 }
 
-// rpc #4 ì°¨ëŸ‰ ë°°ì°¨ì •ë³´(ê²½ìœ ì§€) ì¡°íšŒ
+// rpc #4 Â÷·® ¹èÂ÷Á¤º¸(°æÀ¯Áö) Á¶È¸
 message DispatchQueueRequest {
   string supply_id = 1; 
   int32 region_code = 2;
 }
-// ì‘ë‹µ ë©”ì‹œì§€ Supply -> supply.proto
+// ÀÀ´ä ¸Þ½ÃÁö Supply -> supply.proto

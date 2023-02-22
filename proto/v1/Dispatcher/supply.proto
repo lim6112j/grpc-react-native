@@ -8,23 +8,23 @@ import "Protos/v1/Base/loc.proto";
 package supply;
 
 message Supply{
-//   int32 index = 1; // í˜„ì¬ ìš©ë„ ë¶ˆëª…. ê¸°ì¡´ listí˜•íƒœë¡œ ì €ì¥ë  ë•Œì˜ ìƒ‰ì¸.
+//   int32 index = 1; // ÇöÀç ¿ëµµ ºÒ¸í. ±âÁ¸ listÇüÅÂ·Î ÀúÀåµÉ ¶§ÀÇ »öÀÎ.
   string id = 2;
-  // ë‚´ë¶€ Dictionary Key
+  // ³»ºÎ Dictionary Key
   string name = 3;
-  // int32 region = 4; // ë‚´ë¶€ ì–‘ì‹ì—ì„œ regionCode ì œê±°ë˜ì—ˆìŒ.
+  // int32 region = 4; // ³»ºÎ ¾ç½Ä¿¡¼­ regionCode Á¦°ÅµÇ¾úÀ½.
   // 0 or 1. service_start, service_end
   ServiceState state = 5; 
   
   google.protobuf.Timestamp update_time = 6;
-  // ë‚´ë¶€ì—ì„œëŠ” longitude, latitude ë³„ë„
+  // ³»ºÎ¿¡¼­´Â longitude, latitude º°µµ
   loc.LngLat location = 7; 
   
   repeated RoutingQueue routing_queue_list = 8;
-  repeated string routing_demand_list = 9; // IDê°’
+  repeated string routing_demand_list = 9; // ID°ª
   repeated RoutingDistance routing_distance_list = 10;
   
-  int32 current_passenger = 11; // í˜„ì‹œì ì˜ íƒ‘ìŠ¹ê° ìˆ˜ (= ë‚¨ì€ í•˜ì°¨Queueì˜ ìˆ˜)
+  int32 current_passenger = 11; // Çö½ÃÁ¡ÀÇ Å¾½Â°´ ¼ö (= ³²Àº ÇÏÂ÷QueueÀÇ ¼ö)
   
   enum ServiceState{
         SERVICE_START = 0;
@@ -34,35 +34,42 @@ message Supply{
   message RoutingQueue{
     int32 node_index = 1;
     string station_id = 2; 
-    // ë™ì¼ ë§í¬ë…¸ë“œìƒ ì—¬ëŸ¬ ì •ë¥˜ì¥ ì¡´ì¬ì‹œ ê²½ìœ  ìˆœì„œ ì§€ì •.
+    // µ¿ÀÏ ¸µÅ©³ëµå»ó ¿©·¯ Á¤·ùÀå Á¸Àç½Ã °æÀ¯ ¼ø¼­ ÁöÁ¤.
     int32 station_priority = 3;
     int32 user_id = 4;
-    // ë¶ˆë³€ê°’
+    // ºÒº¯°ª
     QueueState state = 5;
     string demand_id = 6;
-    // í•´ë‹¹ demandì˜ íƒ‘ìŠ¹ì¸ì›
+    // ÇØ´ç demandÀÇ Å¾½ÂÀÎ¿ø
     int32 demand_passenger = 7;
-    // ë‹¤ìŒ Queueê¹Œì§€ì˜ ê²½ë¡œ ì¸ë±ìŠ¤. ë™ì¼ ì •ë¥˜ì¥ì´ê±°ë‚˜ ë§ˆì§€ë§‰ íë©´ -1.
+    // ´ÙÀ½ Queue±îÁöÀÇ °æ·Î ÀÎµ¦½º. µ¿ÀÏ Á¤·ùÀåÀÌ°Å³ª ¸¶Áö¸· Å¥¸é -1.
     int32 path_index = 8; 
-    // ê²½ë¡œì˜ ê¸¸ì´ [m]. ë°°ì°¨ì‹œ ì‹¤ì§ˆì  íŒë‹¨ê¸°ì¤€.
+    // °æ·ÎÀÇ ±æÀÌ [m]. ¹èÂ÷½Ã ½ÇÁúÀû ÆÇ´Ü±âÁØ.
     double path_distance = 9; 
-    // ë‹¤ìŒ Queueê¹Œì§€ì˜ ì˜ˆìƒì´ë™ì‹œê°„ [sec]. ë™ì¼ ì •ë¥˜ì¥ ë˜ëŠ” ë§ˆì§€ë§‰ íì¼ì‹œ 0.
+    // ´ÙÀ½ Queue±îÁöÀÇ ¿¹»óÀÌµ¿½Ã°£ [sec]. µ¿ÀÏ Á¤·ùÀå ¶Ç´Â ¸¶Áö¸· Å¥ÀÏ½Ã 0.
     double estimate_time = 10; 
-    // ê²½ìœ ì§€ ë‹¨ìœ„ ë°©ë¬¸ ìˆœì„œ. 0ë¶€í„° ì‹œì‘.
+    // °æÀ¯Áö ´ÜÀ§ ¹æ¹® ¼ø¼­. 0ºÎÅÍ ½ÃÀÛ.
     int32 sequence_index = 11;
-    // ë°°ì°¨ì·¨ì†Œ í”Œë˜ê·¸ (ë¯¸ì‚¬ìš©) 
+    // ¹èÂ÷Ãë¼Ò ÇÃ·¡±× (¹Ì»ç¿ë) 
     bool cancel_segment = 12; 
 
-    // ë°°ì°¨ì•Œê³ ë¦¬ì¦˜ ì™¸ë¶€ì˜ ì—”ì§„ë‹¨ì—ì„œ ë³„ë„ ì¡°íšŒí•˜ì—¬ ì¶”ê°€
+    // ¹èÂ÷¾Ë°í¸®Áò ¿ÜºÎÀÇ ¿£Áø´Ü¿¡¼­ º°µµ Á¶È¸ÇÏ¿© Ãß°¡
     string station_name = 13;
     loc.LngLat station_lng_lat = 14;
 
+    // START : Å¾½ÂÁö / END : ÇÏÂ÷Áö / CANCEL : ¹èÂ÷ Ãë¼Ò ÁöÁ¡ / RELOCATION : Àç¹èÄ¡ ÁöÁ¡ / 
+    // PREDICTION : ¼ö¿ä ¿¹Ãø ÁöÁ¡ / ROTATION : ±³´ëÁö / REST : ÈŞ°ÔÁö / GARAGE : Â÷°íÁö / REPAIR : ¼ö¸®Áö / ROUTE : °íÁ¤³ë¼±
     enum QueueState{
-        START = 0; // ìŠ¹ì°¨ì§€
-        END = 1; // í•˜ì°¨ì§€
+        START = 0; // ½ÂÂ÷Áö
+        END = 1; // ÇÏÂ÷Áö
         CANCEL = 2;
-        RELOCATION = 3; // ì¬ë°°ì¹˜
-        PREDICTION = 4; // ìˆ˜ìš”ì˜ˆì¸¡ì´ë™
+        RELOCATION = 3; // Àç¹èÄ¡
+        PREDICTION = 4; // ¼ö¿ä¿¹ÃøÀÌµ¿
+        ROTATION = 5; 
+        REST = 6; 
+        GARAGE = 7; 
+        REPAIR = 8;
+        ROUTE = 9;
     }
   }
   
@@ -70,15 +77,15 @@ message Supply{
     string demand_id = 1;
     int32 user_id = 2;
     int32 state = 3;
-    // ë°°ì°¨ ì‹œì ì—ì„œ ì°¨ëŸ‰ì˜ ë…¸ë“œ (ìµœì´ˆ ë¶€ì—¬ í›„ ë¶ˆë³€)
+    // ¹èÂ÷ ½ÃÁ¡¿¡¼­ Â÷·®ÀÇ ³ëµå (ÃÖÃÊ ºÎ¿© ÈÄ ºÒº¯)
     int32 demand_node = 4;
-    // ê°€ë³€. ë§¤ ë°°ì°¨ë§ˆë‹¤ ê°±ì‹ 
+    // °¡º¯. ¸Å ¹èÂ÷¸¶´Ù °»½Å
     int32 recent_node = 5;
-    // ìµœì´ˆ ë°°ì°¨ì‹œ ëŒ€ê¸°ê±°ë¦¬
+    // ÃÖÃÊ ¹èÂ÷½Ã ´ë±â°Å¸®
     double init_wait_distance = 6;
-    // ìµœì´ˆ ë°°ì°¨ì‹œ ìš´í–‰ê±°ë¦¬
+    // ÃÖÃÊ ¹èÂ÷½Ã ¿îÇà°Å¸®
     double init_race_distance = 7;
-    double diff_wait_distance = 8; // ê°€ë³€. ë§¤ ë°°ì°¨ë§ˆë‹¤ ê°±ì‹ 
-    double diff_race_distance = 9; // ê°€ë³€.
+    double diff_wait_distance = 8; // °¡º¯. ¸Å ¹èÂ÷¸¶´Ù °»½Å
+    double diff_race_distance = 9; // °¡º¯.
   }
 }
