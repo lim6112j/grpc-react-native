@@ -5,6 +5,7 @@ import "google/protobuf/empty.proto";        // ºó ÀÀ´äÀÇ ¸í½Ã
 import "google/protobuf/duration.proto";   
 
 option csharp_namespace = "Protos.v1.FrontEnd";
+option objc_class_prefix = "CIL"; // for ios
 
 package frontend;
 

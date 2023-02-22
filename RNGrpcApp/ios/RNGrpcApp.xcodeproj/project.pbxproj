@@ -17,6 +17,8 @@
 		851D10952921DA6300B9238F /* authService.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851D10932921DA6200B9238F /* authService.pb.swift */; };
 		851D10972921DB5900B9238F /* AuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851D10962921DB5900B9238F /* AuthClient.swift */; };
 		851D10992921FB4700B9238F /* AuthClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 851D10982921FB4700B9238F /* AuthClient.m */; };
+		85D7AE3829A5E6E700E5C756 /* frontend_mobile.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D7AE3629A5E6E700E5C756 /* frontend_mobile.grpc.swift */; };
+		85D7AE3929A5E6E700E5C756 /* frontend_mobile.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D7AE3729A5E6E700E5C756 /* frontend_mobile.pb.swift */; };
 		8F67FD1D2C222084B033A62B /* Pods_RNGrpcApp_RNGrpcAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 301D34575C261657983744C2 /* Pods_RNGrpcApp_RNGrpcAppTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -52,6 +54,8 @@
 		851D10932921DA6200B9238F /* authService.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = authService.pb.swift; path = ../../proto/ios/authService.pb.swift; sourceTree = "<group>"; };
 		851D10962921DB5900B9238F /* AuthClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthClient.swift; sourceTree = "<group>"; };
 		851D10982921FB4700B9238F /* AuthClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuthClient.m; sourceTree = "<group>"; };
+		85D7AE3629A5E6E700E5C756 /* frontend_mobile.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = frontend_mobile.grpc.swift; path = ../../proto/ciel_frontend_mobile_ios/frontend_mobile.grpc.swift; sourceTree = "<group>"; };
+		85D7AE3729A5E6E700E5C756 /* frontend_mobile.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = frontend_mobile.pb.swift; path = ../../proto/ciel_frontend_mobile_ios/frontend_mobile.pb.swift; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-RNGrpcApp-RNGrpcAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNGrpcApp-RNGrpcAppTests.release.xcconfig"; path = "Target Support Files/Pods-RNGrpcApp-RNGrpcAppTests/Pods-RNGrpcApp-RNGrpcAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -96,6 +100,8 @@
 		13B07FAE1A68108700A75B9A /* RNGrpcApp */ = {
 			isa = PBXGroup;
 			children = (
+				85D7AE3629A5E6E700E5C756 /* frontend_mobile.grpc.swift */,
+				85D7AE3729A5E6E700E5C756 /* frontend_mobile.pb.swift */,
 				851D10922921DA6200B9238F /* authService.grpc.swift */,
 				851D10932921DA6200B9238F /* authService.pb.swift */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -394,6 +400,8 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				851D10972921DB5900B9238F /* AuthClient.swift in Sources */,
+				85D7AE3929A5E6E700E5C756 /* frontend_mobile.pb.swift in Sources */,
+				85D7AE3829A5E6E700E5C756 /* frontend_mobile.grpc.swift in Sources */,
 				851D10992921FB4700B9238F /* AuthClient.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				851D10952921DA6300B9238F /* authService.pb.swift in Sources */,
