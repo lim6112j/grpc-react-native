@@ -1,0 +1,579 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";    // ½Ã°¢
+import "google/protobuf/empty.proto";        // ºó ÀÀ´äÀÇ ¸í½Ã
+import "google/protobuf/duration.proto";   
+
+option csharp_namespace = "Protos.v1.FrontEnd";
+
+package frontend;
+
+service UserService{
+	rpc GetUserState(google.protobuf.Empty) returns (stream UserStateResponse);
+}
+
+service SupplyService{
+	rpc GetSupplyState(google.protobuf.Empty) returns (stream SupplyStateResponse);
+	rpc SetSupplyLocation(stream SupplyLocationRequest) returns (google.protobuf.Empty);
+    rpc GetSupplyLocation(stream GetSupplyLocationRequest) returns (SupplyLocationResponse);
+}
+
+service FrontEnd{
+	//rpc SetUserState(redis.UserState) returns (google.protobuf.Empty);
+	//rpc SetSupplyState(redis.SupplyState) returns (google.protobuf.Empty);
+	
+	//rpc SetSupplyWaypoint(supply.Supply) returns (google.protobuf.Empty);
+	//rpc SetSupplyWaypointEta(redis.SupplyWaypointEtas) returns (google.protobuf.Empty);
+	//rpc SetSupplyWaypointPath(redis.SupplyWaypointPaths) returns (google.protobuf.Empty);
+
+	rpc SetDispatch(FrontEndDispatchRequest) returns (google.protobuf.Empty);
+	rpc SetDispatchCancel(SetDispatchCancelRequest) returns (google.protobuf.Empty);
+	//rpc SetArrivalWaypoint(SetArrivalWaypointRequest) returns (google.protobuf.Empty);	
+
+}
+
+message UserStateRequest{
+	int32 UserIdx = 1;
+}
+
+message UserStateResponse{
+	repeated UserStateWithInfo user_state_with_info = 1;
+}
+message UserStateWithInfo
+{
+	UserState user_state = 1;
+
+	VehicleInfo vehicle_info = 6;
+
+	LngLat from_lng_lat = 7;	
+	Path from_walk_path = 8;
+	LngLat to_lng_lat = 9;
+	Path to_walk_path = 10;
+
+	string item_detail = 11;
+	
+	google.protobuf.Timestamp pick_up_eta = 12;
+	google.protobuf.Timestamp drop_off_eta = 13;
+
+	repeated SupplyWaypoint supply_waypoint_list = 14;
+	repeated Path supply_waypoint_path_list = 15;
+
+	int32 pick_up_path_seq = 16;
+	int32 drop_off_path_seq = 17;
+
+	google.protobuf.Timestamp supply_waypoint_version = 18;
+	google.protobuf.Timestamp supply_waypoint_eta_version = 19;
+	google.protobuf.Timestamp supply_waypoint_path_version = 20;
+
+}
+
+message GetSupplyLocationRequest{
+	int32 supply_idx = 1;
+}
+
+message SupplyStateResponse{	
+	repeated SupplyState supply_state = 1;	
+
+	repeated SupplyWaypoint supply_waypoint_list = 2;
+	repeated SupplyWaypointEta supply_waypoint_eta_list = 3;
+	repeated SupplyWaypointPath supply_waypoint_path_list = 4;
+	
+	google.protobuf.Timestamp supply_waypoint_version = 5;
+	google.protobuf.Timestamp supply_waypoint_eta_version = 6;
+	google.protobuf.Timestamp supply_waypoint_path_version = 7;
+
+	int32 recent_stop_idx = 8;
+	int32 visit_type = 9;
+}
+
+message SupplyLocationRequest{
+    Loc loc = 1;
+}
+
+message SupplyLocationResponse{    
+	SupplyLocationMatched supply_locationMatched = 1;
+}
+
+message FrontEndDispatchRequest{
+	int32 user_idx = 1;
+	int32 region_code = 2;
+	int32 item_count = 3;
+	string item_type = 4;
+	string item_detail = 5;
+	string demand_type = 6;
+	int32 pick_up_stop_idx = 7;
+	int32 drop_off_stop_idx = 8;
+	string from_walk_path = 9;
+	string to_walk_path = 10;
+	LngLat from_lng_lat = 11;
+	string from_poi = 12;
+	LngLat to_lng_lat = 13;
+	string to_poi = 14;
+	LngLat pick_up_lng_lat = 15;
+	string pick_up_poi = 16;
+	LngLat drop_off_lng_lat = 17;
+	string drop_off_poi = 18;
+}
+
+message FrontEndDispatchResponse{
+	bool is_success = 1;
+}
+
+message VehicleInfo{
+	int32 supply_id =1;
+	LngLat supply_loc =2;
+	float direction = 3;
+	float speed = 4;
+	string supply_name = 5;
+	string number_plate = 6;
+	string driver_name = 7;
+	string drvier_image_url = 8;
+}
+
+message DemandWaypoint{
+	int32 seq = 1;
+	int32 stop_idx = 2;
+	string name = 3;
+	LngLat waypoint_lng_lat = 4;
+	DemandWaypointType waypoint_type = 5;
+}
+	
+enum DemandWaypointType {
+	PICK_UP_POINT = 0;
+	DROP_OFF_POINT = 1;
+	WAYPOINT = 2;
+	DEPARTURE_POINT = 3;
+	ARRIVAL_POINT = 4;
+}
+
+message SetDispatchCancelRequest{
+	int32 user_idx = 1;
+	int32 region_code = 2;
+	string demand_id =3;
+}
+
+message SetArrivalWaypointRequest{
+	int32 supply_idx = 1;
+	int32 stop_idx = 2;
+	int32 region_code = 3;
+}
+
+message Path {    
+    repeated Link links = 1;
+    // The total distance of the path in meter
+    double dist = 2;
+    // The total duration of the path in msec
+    int64 duration = 3;
+}
+
+message Link {
+    int64 id = 1;
+    double length = 2;
+    int64 duration = 3;
+    repeated LngLat lnglats = 4;
+}
+
+message Loc {
+    LngLat lnglat = 1;
+    float accuracy = 2;
+    // Current heading value from 0 to 360 degrees
+    float heading = 3;
+    // Current speed in meter per second
+    float speed = 4;    
+    string get_date = 5;
+}
+
+
+message UserState
+{
+    int32 user_idx = 1;
+	int32 state = 2;
+	int32 supply_idx = 3;
+	string demand_id = 4;
+	string enqueue_event_time = 5;
+}
+
+//Redis ÀúÀå±¸Á¶
+message SupplyState{
+    int32 supply_idx = 1;
+	int32 state = 2;	
+	string enqueue_event_time = 3;	
+}
+
+//Redis ÀúÀå±¸Á¶
+message SupplyLocation{    
+	int32 supply_idx = 1;
+	string device_id = 2;
+	Loc loc = 3;
+}
+
+// ÁÖ¾îÁø °æ·Î À§ÀÇ Â÷·®ÃøÀ§ º¸Á¤°ª
+message SupplyLocationMatched{
+	int32 supply_id = 1;
+	// SupplyLocation¿¡¼­ ¼öÁýÇÑ ¿øº» ÃøÀ§ÁÂÇ¥ 
+	LngLat raw_lng_lat = 2;
+	// ±âÁØÀÌ µÈ °æ·Î(SupplyWaypointPath)ÀÇ ¹öÀü
+	google.protobuf.Timestamp path_version = 3;
+	// ÇØ´ç ¸Þ½ÃÁö°¡ ¾øÀ» ½Ã ¿øº» ÁÂÇ¥¸¸ ½Å·Ú°¡´É.
+	// Ã£Áö ¸øÇßÀ»¶§ ±âÁ¸ÀÇ ¸¶Áö¸· °ªÀ» Àü´ÞÇØ¾ßÇÒÁö ¹ÌÁ¤.
+	// ÀûÀýÇÑ À¯È¿¼º ÆÇ´Ü ·ÎÁ÷ÀÌ Ãß°¡µÉ¶§±îÁö´Â °æ·Î°¡ Á¸ÀçÇÏ´Â ÇÑ Ç×»ó true.
+	Matched match_result = 4;
+	message Matched{
+	// SupplyWaypointPathsÀÇ °æ·Î¸¦ ±âÁØÀ¸·ÎÇÑ °¢°¢ÀÇ »öÀÎ°ª.	ÇöÀç path_index´Â 0(Â÷·®->Ã¹¹øÂ° °æÀ¯Áö)À¸·Î °íÁ¤.
+	int32 path_index = 1;
+	int32 link_index = 2;
+	int32 lng_lat_index = 3;
+	// °æ·Î»ó¿¡ Æ÷ÇÔµÇµµ·Ï º¸Á¤µÈ ÁÂÇ¥. ·»´õ¸µ ½Ã °æ·Î¸¦ ÀÌ ÁÂÇ¥ºÎÅÍ ±×¸®¸é µË´Ï´Ù.
+	LngLat adjusted_lng_lat = 4;
+	}	
+}
+
+// #1 Waypoint °»½Å ¸Þ½ÃÁö
+
+// ±âÁ¸ api ÀÀ´ä ¾ç½Ä È£È¯ (userApp)
+message SupplyWaypoints
+{
+	repeated SupplyWaypoint supply_waypoint = 1;
+	google.protobuf.Timestamp get_date = 2;
+}
+
+// º¯°æ¾È
+message SupplyWaypointUpdate {	
+	int32 supply_id = 1;																		
+	google.protobuf.Timestamp waypoint_version = 2;																// ½º³À¼¦ ¹ß»ý½Ã°¢ yyyy-MM-dd hh:mm:ss.ffffff ( Timestamp Æ÷¸Ë + UTC ·Î ÀüÈ¯ÇÏ´Â ÆíÀÌ ¹Ù¶÷Á÷ )
+	WaypointActionType action = 3;																// °æÀ¯Áö °»½ÅÀ» ÀÏÀ¸Å² ¾×¼Ç
+
+	oneof action_detail {																		// ¾×¼Çº° »ó¼¼Á¤º¸
+		DispatchDetail dispatch_detail = 4;
+		ArrivalDetail arrival_detail = 5;
+		CancelDetail cancel_detail = 6;
+	}
+	repeated SupplyWaypoint supply_waypoint_list = 7;											// °æÀ¯Áö ¸ñ·Ï ½º³À¼¦ - °»½Å ÈÄ 
+
+	enum WaypointActionType{																	// °æÀ¯Áö °»½Å ¾×¼Ç ¸ñ·Ï
+		DISPATCH = 0;
+		ARRIVAL = 1;
+		CANCEL = 2;
+	}
+	message DispatchDetail{																		// ½Å±Ô¹èÂ÷ÀÚ °æÀ¯Áö ÀÎµ¦½º (Çö ½º³À¼¦ ±âÁØ)
+		string demand_id = 1;
+		int32 pick_waypoint_sequence = 2;
+		int32 drop_waypoint_sequence = 3;
+	}
+	message ArrivalDetail{
+		SupplyWaypoint removed_waypoint = 1;													// µµÂøÃ³¸® °£ Á¦°ÅµÈ Á¤·ùÀåÀÇ ½ÂÇÏÂ÷ Á¤º¸ (¿øº»À» ±×´ë·Î copyÇÏ¿© ³ë¼î ½Â°´ Æ÷ÇÔ)
+		repeated DemandStationInfoFromPrev noshow_dropinfo_list = 2;							// ³ë¼î ÁÖ¹®µéÀÇ ID ¹× ÇÏÂ÷Áö
+	}
+	message CancelDetail {
+		string demand_id = 1;
+		DemandStationInfoFromPrev canceled_info_pick = 2;										// ÁÖ¹®Ãë¼Ò ½ÂÂ÷Áö Á¤º¸
+		DemandStationInfoFromPrev canceled_info_drop = 3;										// ÁÖ¹®Ãë¼Ò ÇÏÂ÷Áö Á¤º¸
+	}	
+	message DemandStationInfoFromPrev {															// Á÷Àü ¹öÀü supply_waypoint_list¿¡¼­ °¡Á®¿Â µ¥ÀÌÅÍ °øÅë¾ç½Ä
+		string demand_id = 1;
+		int32 stop_idx = 2;
+		int32 waypoint_seq = 3;																	// from previous snapshot.
+		LngLat waypoint_lng_lat = 4;
+		string waypoint_name = 5;
+	}
+}
+
+message SupplyWaypoint{
+	int32 supply_id = 1;	
+	int32 stop_idx = 2;
+	int32 waypoint_seq = 3;
+	LngLat waypoint_lng_lat = 4;
+	string waypoint_name = 5;
+	string waypoint_desc = 6;
+	SupplyWaypointType waypoint_type = 7;
+	repeated string pick_up_demand_id_list = 8;
+	repeated string drop_off_demand_id_list = 9;
+	repeated int32 pick_up_user_id_list = 10;
+	repeated int32 drop_off_user_id_list = 11;
+
+	enum SupplyWaypointType{
+		PICK_DROP = 0;
+		CANCEL = 1;
+		PARKING = 2;
+		GARAGE = 3;
+		REST = 4;	
+		RELOCATION = 5;
+		PREDICTION = 6;
+		ROTATION = 7; 
+        REPAIR = 8;
+        ROUTE = 9;					// »çÀüÀÔ·ÂµÈ ³ë¼± °æÀ¯Áö
+	}
+}
+
+// #2 Path °»½Å ¸Þ½ÃÁö
+
+// ±âÁ¸ api È£È¯À§ÇØ À¯Áö (userApp)
+message SupplyWaypointPaths
+{
+	repeated SupplyWaypointPath supply_waypoint_path = 1;
+	google.protobuf.Timestamp get_date = 2;
+}
+
+// º¯°æ¾È
+message SupplyWaypointPathUpdate
+{
+	int32 supply_id = 1;
+	google.protobuf.Timestamp path_version = 2;
+	google.protobuf.Timestamp waypoint_version = 3; // °æ·Î °è»ê½Ã »ç¿ëµÈ °æÀ¯Áö ¹öÀü (join keyÀÇ ÀÏºÎ)
+	PathActionType action = 4;
+
+	repeated SupplyWaypointPath supply_waypoint_path_list = 7;
+
+	enum PathActionType{
+		WAYPOINT_UPDATE = 0;	// °æÀ¯Áö º¯°æÀ¸·Î ÀÎÇÑ °»½Å
+		OFFTRACK = 1;			// ÁÖÇà°æ·Î ÀÌÅ»·Î ÀÎÇÑ °»½Å
+	}
+}
+
+// TODO: path ¿Ü¿¡ ÀüºÎ Áßº¹ µ¥ÀÌÅÍ. ¾Û°úÀÇ È£È¯¼ºÀ» À§ÇØ ¾ç½Ä À¯ÁöÇÏ°í Â÷ÈÄ ÇÊ¿ä¿¡ µû¶ó Áßº¹Á¦°Å
+message SupplyWaypointPath{
+	int32 supply_id = 1;
+	int32 waypoint_seq = 2;
+	Path path = 3;	
+	//repeated string pick_up_demand_id_list = 4;
+	//repeated string drop_off_demand_id_list = 5;
+	//repeated int32 pick_up_user_id_list = 6;
+	//repeated int32 drop_off_user_id_list = 7;
+}
+
+// #3 ETA °»½Å ¸Þ½ÃÁö
+// ±âÁ¸ ¾ç½Ä À¯Áö
+message SupplyWaypointEtas
+{
+	repeated SupplyWaypointEta supply_waypoint_eta = 1;	
+	google.protobuf.Timestamp get_date = 2;
+}
+
+// º¯°æ¾È
+message SupplyWaypointEtaUpdate
+{
+	int32 supply_id = 1;
+	google.protobuf.Timestamp eta_version = 2;
+	google.protobuf.Timestamp waypoint_version = 3; // °æ·Î °è»ê½Ã »ç¿ëµÈ °æÀ¯Áö ¹öÀü (join keyÀÇ ÀÏºÎ)
+	EtaActionType action = 4;
+
+	repeated SupplyWaypointEta supply_waypoint_eta_list = 7;
+
+	enum EtaActionType{
+		WAYPOINT_UPDATE = 0;	// °æÀ¯Áö º¯°æÀ¸·Î ÀÎÇÑ °»½Å
+		PATH_OFFTRACK = 1;			// ÁÖÇà°æ·Î ÀÌÅ»·Î ÀÎÇÑ °æ·Î Àç°è»ê ÈÄ °»½Å
+		ETA_OFFTRACK = 2;			// ±âÁ¸ ETA ´ëºñ Â÷ÀÌ°¡ ½ÉÇÒ¶§ °»½Å
+	}
+}
+
+message SupplyWaypointEta{
+	int32 supply_id = 1;
+	int32 waypoint_seq = 2;
+	google.protobuf.Timestamp eta = 3;	
+	//repeated string pick_up_demand_id_list = 4;
+	//repeated string drop_off_demand_id_list = 5;
+	//repeated int32 pick_up_user_id_list = 6;
+	//repeated int32 drop_off_user_id_list = 7;
+}
+
+service RoutePlanner {
+  // find path, Eta of given O/D
+  rpc FindPath (FindPathRequest) returns (FindPathReply);
+  rpc FindMultiPath (FindMultiPathRequest) returns (FindMultiPathReply);
+  rpc GetPathEtaOfWaypoints(WaypointsWithSupply) returns (PathWithEtaPerWaypoint);
+}
+
+// rpc #1 ´Ü¼ø °æ·ÎÁ¶È¸ (with Á¤·ùÀåID)
+message FindPathRequest {
+  int32 region_code = 1;
+  string pick_station_id = 2;
+  string drop_station_id = 3;
+}
+
+message FindPathReply {		
+  int32 region_code = 1;
+  Path path = 2;
+  double duration = 3;
+}
+
+// rpc #2 ´ÙÁß °æ·ÎÁ¶È¸ (with Á¤·ùÀåID)
+message FindMultiPathRequest {
+  repeated FindPathRequest requests = 1;
+}
+
+message FindMultiPathReply {		
+  repeated FindPathReply replies = 1;
+}
+
+// rpc #3 °æÀ¯Áö ¸ñ·Ï¿¡ ´ëÇÑ °æ·Î,ETA Á¶È¸
+message WaypointsWithSupply{	
+  // ÇÊ¼ö ÀÔ·Â°ª
+  int32 region_code = 1;
+  string supply_id = 2;
+  repeated Waypoint waypoint_list = 3;
+
+  // ¼±ÅÃ ÀÔ·Â°ª (ÇöÀç ¹Ì±¸Çö)
+  // ÇöÀç RoutePlanner ÀÚÃ¼ÀûÀ¸·Î Â÷·® À§Ä¡ Á¶È¸ ¹× ¸Ê¸ÅÄª ÇÏ¿© »ç¿ë.
+  LngLat supply_lng_lat = 4;
+  // ¿ÜºÎ¿¡¼­ ¸Ê¸ÅÄª½Ã ÀÔ·Â
+  int32 supply_node_idx = 5;
+  // °æÀ¯Áö µµÂøÇÏ¿© ±æ Ã£À»¶§ Â÷·®ÀÌ µµÂøÇÑ °æÀ¯Áö. ÀÌ °ªÀÌ Á¸ÀçÇÏ¸é Â÷·® À§Ä¡¸¦ ´ë½ÅÇÏ¿© ±æÃ£±â¿¡ »ç¿ëµÊ.
+  Waypoint arrived_waypoint = 7;
+  // Â÷·® ÇöÀ§Ä¡¿¡¼­ Ãâ¹ßÇÒ ½Ã°¢ (default : DateTime.Now)
+  google.protobuf.Timestamp start_time_at_car = 6;
+
+  message Waypoint{
+    
+	// Åë½Å ¾çÃøÀÌ µ¿ÀÏÇÑ µµ·Îµ¥ÀÌÅÍ Á¤º¸¸¦ ±âÁØÀ¸·Î ÇØ¾ßÇÔ.
+    int32 node_idx = 1 [deprecated = true];
+
+    // °ËÅäÇÊ¿ä : RoutePlanner°¡ Á¤·ùÀå Á¤º¸¸¦ ¾Ë°í ÀÖ´Ù´Â ÀüÁ¦ÇÏ¿¡
+    // ³»ºÎÀûÀ¸·Î station_id =>node_idx·Î ¸ÅÇÎÇÏ¿© °æ·ÎÅ½»ö.
+	string station_id = 2; 
+
+	LngLat station_lng_lat = 3 [deprecated = true]; 
+  }
+}
+
+message PathWithEtaPerWaypoint{
+  // °æ·Î [ Â÷·® -> °æÀ¯Áö 1, °æÀ¯Áö1 -> °æÀ¯Áö 2, ...]
+  repeated Path path_list = 1;
+  // ¼Ò¿ä½Ã°£(ÃÊ) [ Â÷·® -> °æÀ¯Áö 1, °æÀ¯Áö1 -> °æÀ¯Áö 2, ...]
+  repeated double duration_list = 2;
+  // ¿¹Á¤µµÂø½Ã°¢ [ °æÀ¯Áö 1, °æÀ¯Áö 2, ...]
+  repeated google.protobuf.Timestamp eta_list = 3;
+}
+
+// Service #. Á¤·ùÀå °ð µµÂø È®ÀÎ (ÀÚÃ¼ ·çÇÁ·Î ±¸Çö¿¹Á¤. gRpc·Î È£Ãâ½Ã ¿ÜºÎ¿¡¼­ ·çÇÁ°¡µ¿.)
+//service ArriveSoonMonitor{
+//  rpc ReportSupplyLocForArrivalCheck(ArrivalCheckInfo) returns (google.protobuf.Empty);
+//}
+//
+//message ArrivalCheckInfo
+//{
+//  string supply_id = 1;
+//  LngLat supply_lng_lat = 2;
+//}
+
+message Supply{
+//   int32 index = 1; // ÇöÀç ¿ëµµ ºÒ¸í. ±âÁ¸ listÇüÅÂ·Î ÀúÀåµÉ ¶§ÀÇ »öÀÎ.
+  string id = 2;
+  // ³»ºÎ Dictionary Key
+  string name = 3;
+  // int32 region = 4; // ³»ºÎ ¾ç½Ä¿¡¼­ regionCode Á¦°ÅµÇ¾úÀ½.
+  // 0 or 1. service_start, service_end
+  ServiceState state = 5; 
+  
+  google.protobuf.Timestamp update_time = 6;
+  // ³»ºÎ¿¡¼­´Â longitude, latitude º°µµ
+  LngLat location = 7; 
+  
+  repeated RoutingQueue routing_queue_list = 8;
+  repeated string routing_demand_list = 9; // ID°ª
+  repeated RoutingDistance routing_distance_list = 10;
+  
+  int32 current_passenger = 11; // Çö½ÃÁ¡ÀÇ Å¾½Â°´ ¼ö (= ³²Àº ÇÏÂ÷QueueÀÇ ¼ö)
+  
+  enum ServiceState{
+        SERVICE_START = 0;
+        SERVICE_END = 1;
+  }
+
+  message RoutingQueue{
+    int32 node_index = 1;
+    string station_id = 2; 
+    // µ¿ÀÏ ¸µÅ©³ëµå»ó ¿©·¯ Á¤·ùÀå Á¸Àç½Ã °æÀ¯ ¼ø¼­ ÁöÁ¤.
+    int32 station_priority = 3;
+    int32 user_id = 4;
+    // ºÒº¯°ª
+    QueueState state = 5;
+    string demand_id = 6;
+    // ÇØ´ç demandÀÇ Å¾½ÂÀÎ¿ø
+    int32 demand_passenger = 7;
+    // ´ÙÀ½ Queue±îÁöÀÇ °æ·Î ÀÎµ¦½º. µ¿ÀÏ Á¤·ùÀåÀÌ°Å³ª ¸¶Áö¸· Å¥¸é -1.
+    int32 path_index = 8; 
+    // °æ·ÎÀÇ ±æÀÌ [m]. ¹èÂ÷½Ã ½ÇÁúÀû ÆÇ´Ü±âÁØ.
+    double path_distance = 9; 
+    // ´ÙÀ½ Queue±îÁöÀÇ ¿¹»óÀÌµ¿½Ã°£ [sec]. µ¿ÀÏ Á¤·ùÀå ¶Ç´Â ¸¶Áö¸· Å¥ÀÏ½Ã 0.
+    double estimate_time = 10; 
+    // °æÀ¯Áö ´ÜÀ§ ¹æ¹® ¼ø¼­. 0ºÎÅÍ ½ÃÀÛ.
+    int32 sequence_index = 11;
+    // ¹èÂ÷Ãë¼Ò ÇÃ·¡±× (¹Ì»ç¿ë) 
+    bool cancel_segment = 12; 
+
+    // ¹èÂ÷¾Ë°í¸®Áò ¿ÜºÎÀÇ ¿£Áø´Ü¿¡¼­ º°µµ Á¶È¸ÇÏ¿© Ãß°¡
+    string station_name = 13;
+    LngLat station_lng_lat = 14;
+
+    // START : Å¾½ÂÁö / END : ÇÏÂ÷Áö / CANCEL : ¹èÂ÷ Ãë¼Ò ÁöÁ¡ / RELOCATION : Àç¹èÄ¡ ÁöÁ¡ / 
+    // PREDICTION : ¼ö¿ä ¿¹Ãø ÁöÁ¡ / ROTATION : ±³´ëÁö / REST : ÈÞ°ÔÁö / GARAGE : Â÷°íÁö / REPAIR : ¼ö¸®Áö / ROUTE : °íÁ¤³ë¼±
+    enum QueueState{
+        START = 0; // ½ÂÂ÷Áö
+        END = 1; // ÇÏÂ÷Áö
+        CANCEL = 2;
+        RELOCATION = 3; // Àç¹èÄ¡
+        PREDICTION = 4; // ¼ö¿ä¿¹ÃøÀÌµ¿
+        ROTATION = 5; 
+        REST = 6; 
+        GARAGE = 7; 
+        REPAIR = 8;
+        ROUTE = 9;
+    }
+  }
+  
+  message RoutingDistance{
+    string demand_id = 1;
+    int32 user_id = 2;
+    int32 state = 3;
+    // ¹èÂ÷ ½ÃÁ¡¿¡¼­ Â÷·®ÀÇ ³ëµå (ÃÖÃÊ ºÎ¿© ÈÄ ºÒº¯)
+    int32 demand_node = 4;
+    // °¡º¯. ¸Å ¹èÂ÷¸¶´Ù °»½Å
+    int32 recent_node = 5;
+    // ÃÖÃÊ ¹èÂ÷½Ã ´ë±â°Å¸®
+    double init_wait_distance = 6;
+    // ÃÖÃÊ ¹èÂ÷½Ã ¿îÇà°Å¸®
+    double init_race_distance = 7;
+    double diff_wait_distance = 8; // °¡º¯. ¸Å ¹èÂ÷¸¶´Ù °»½Å
+    double diff_race_distance = 9; // °¡º¯.
+  }
+}
+
+message TripPlannerResult{
+    int32 return_code = 1;
+    string result_message = 2;
+    repeated Trip data = 3;
+}
+
+message Trip{
+    string type = 1;
+    int32 total_price = 2;
+    int32 transfer_count = 3;
+    int32 total_distance = 4;
+    int32 total_time = 5;
+
+    int32 aboard_time = 6;
+    int32 aboard_distance = 7;
+
+    int32 walk_time = 8;
+    int32 walk_distance = 9;
+    int32 pickup_stop_idx = 10;
+    int32 dropoff_stop_idx = 11;
+
+    repeated Waypoint waypoints = 12;
+
+    repeated Path paths = 13;
+}
+
+message Waypoint{
+    int32 seq = 1;
+    string type = 2;
+    double lng = 3;
+    double lat = 4;
+    string name = 5;
+}
+
+
+message LngLat{
+    double lng = 1;
+    double lat = 2;
+}

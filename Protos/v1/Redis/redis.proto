@@ -1,0 +1,202 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";    // 시각
+import "Protos/v1/Base/loc.proto";
+
+option csharp_namespace = "Protos.v1.Redis";
+
+package redis;
+
+// #0 유저,차량 기본상태 메시지
+//Redis 저장 구조
+message UserState
+{
+    int32 user_idx = 1;
+	int32 state = 2;
+	int32 supply_idx = 3;
+	string demand_id = 4;
+	string enqueue_event_time = 5;
+}
+
+//Redis 저장구조
+message SupplyState{
+    int32 supply_idx = 1;
+	int32 state = 2;	
+	string enqueue_event_time = 3;	
+}
+
+//Redis 저장구조
+message SupplyLocation{    
+	int32 supply_idx = 1;
+	string device_id = 2;
+	loc.Loc loc = 3;
+}
+
+// 주어진 경로 위의 차량측위 보정값
+message SupplyLocationMatched{
+	int32 supply_id = 1;
+	// SupplyLocation에서 수집한 원본 측위좌표 
+	loc.LngLat raw_lng_lat = 2;
+	// 기준이 된 경로(SupplyWaypointPath)의 버전
+	google.protobuf.Timestamp path_version = 3;
+	// 해당 메시지가 없을 시 원본 좌표만 신뢰가능.
+	// 찾지 못했을때 기존의 마지막 값을 전달해야할지 미정.
+	// 적절한 유효성 판단 로직이 추가될때까지는 경로가 존재하는 한 항상 true.
+	Matched match_result = 4;
+	message Matched{
+	// SupplyWaypointPaths의 경로를 기준으로한 각각의 색인값.	현재 path_index는 0(차량->첫번째 경유지)으로 고정.
+	int32 path_index = 1;
+	int32 link_index = 2;
+	int32 lng_lat_index = 3;
+	// 경로상에 포함되도록 보정된 좌표. 렌더링 시 경로를 이 좌표부터 그리면 됩니다.
+	loc.LngLat adjusted_lng_lat = 4;
+	}	
+}
+
+// #1 Waypoint 갱신 메시지
+
+// 기존 api 응답 양식 호환 (userApp)
+message SupplyWaypoints
+{
+	repeated SupplyWaypoint supply_waypoint = 1;
+	google.protobuf.Timestamp get_date = 2;
+}
+
+// 변경안
+message SupplyWaypointUpdate {	
+	int32 supply_id = 1;																		
+	google.protobuf.Timestamp waypoint_version = 2;																// 스냅샷 발생시각 yyyy-MM-dd hh:mm:ss.ffffff ( Timestamp 포맷 + UTC 로 전환하는 편이 바람직 )
+	WaypointActionType action = 3;																// 경유지 갱신을 일으킨 액션
+
+	oneof action_detail {																		// 액션별 상세정보
+		DispatchDetail dispatch_detail = 4;
+		ArrivalDetail arrival_detail = 5;
+		CancelDetail cancel_detail = 6;
+	}
+	repeated SupplyWaypoint supply_waypoint_list = 7;											// 경유지 목록 스냅샷 - 갱신 후 
+
+	enum WaypointActionType{																	// 경유지 갱신 액션 목록
+		DISPATCH = 0;
+		ARRIVAL = 1;
+		CANCEL = 2;
+	}
+	message DispatchDetail{																		// 신규배차자 경유지 인덱스 (현 스냅샷 기준)
+		string demand_id = 1;
+		int32 pick_waypoint_sequence = 2;
+		int32 drop_waypoint_sequence = 3;
+	}
+	message ArrivalDetail{
+		SupplyWaypoint removed_waypoint = 1;													// 도착처리 간 제거된 정류장의 승하차 정보 (원본을 그대로 copy하여 노쇼 승객 포함)
+		repeated DemandStationInfoFromPrev noshow_dropinfo_list = 2;							// 노쇼 주문들의 ID 및 하차지
+	}
+	message CancelDetail {
+		string demand_id = 1;
+		DemandStationInfoFromPrev canceled_info_pick = 2;										// 주문취소 승차지 정보
+		DemandStationInfoFromPrev canceled_info_drop = 3;										// 주문취소 하차지 정보
+	}	
+	message DemandStationInfoFromPrev {															// 직전 버전 supply_waypoint_list에서 가져온 데이터 공통양식
+		string demand_id = 1;
+		int32 stop_idx = 2;
+		int32 waypoint_seq = 3;																	// from previous snapshot.
+		loc.LngLat waypoint_lng_lat = 4;
+		string waypoint_name = 5;
+	}
+}
+
+message SupplyWaypoint{
+	int32 supply_id = 1;	
+	int32 stop_idx = 2;
+	int32 waypoint_seq = 3;
+	loc.LngLat waypoint_lng_lat = 4;
+	string waypoint_name = 5;
+	string waypoint_desc = 6;
+	SupplyWaypointType waypoint_type = 7;
+	repeated string pick_up_demand_id_list = 8;
+	repeated string drop_off_demand_id_list = 9;
+	repeated int32 pick_up_user_id_list = 10;
+	repeated int32 drop_off_user_id_list = 11;
+
+	enum SupplyWaypointType{
+		PICK_DROP = 0;
+		CANCEL = 1;
+		PARKING = 2;
+		GARAGE = 3;
+		REST = 4;	
+		RELOCATION = 5;
+		PREDICTION = 6;
+		ROTATION = 7; 
+        REPAIR = 8;
+        ROUTE = 9;					// 사전입력된 노선 경유지
+	}
+}
+
+// #2 Path 갱신 메시지
+
+// 기존 api 호환위해 유지 (userApp)
+message SupplyWaypointPaths
+{
+	repeated SupplyWaypointPath supply_waypoint_path = 1;
+	google.protobuf.Timestamp get_date = 2;
+}
+
+// 변경안
+message SupplyWaypointPathUpdate
+{
+	int32 supply_id = 1;
+	google.protobuf.Timestamp path_version = 2;
+	google.protobuf.Timestamp waypoint_version = 3; // 경로 계산시 사용된 경유지 버전 (join key의 일부)
+	PathActionType action = 4;
+
+	repeated SupplyWaypointPath supply_waypoint_path_list = 7;
+
+	enum PathActionType{
+		WAYPOINT_UPDATE = 0;	// 경유지 변경으로 인한 갱신
+		OFFTRACK = 1;			// 주행경로 이탈로 인한 갱신
+	}
+}
+
+// TODO: path 외에 전부 중복 데이터. 앱과의 호환성을 위해 양식 유지하고 차후 필요에 따라 중복제거
+message SupplyWaypointPath{
+	int32 supply_id = 1;
+	int32 waypoint_seq = 2;
+	loc.Path path = 3;	
+	//repeated string pick_up_demand_id_list = 4;
+	//repeated string drop_off_demand_id_list = 5;
+	//repeated int32 pick_up_user_id_list = 6;
+	//repeated int32 drop_off_user_id_list = 7;
+}
+
+// #3 ETA 갱신 메시지
+// 기존 양식 유지
+message SupplyWaypointEtas
+{
+	repeated SupplyWaypointEta supply_waypoint_eta = 1;	
+	google.protobuf.Timestamp get_date = 2;
+}
+
+// 변경안
+message SupplyWaypointEtaUpdate
+{
+	int32 supply_id = 1;
+	google.protobuf.Timestamp eta_version = 2;
+	google.protobuf.Timestamp waypoint_version = 3; // 경로 계산시 사용된 경유지 버전 (join key의 일부)
+	EtaActionType action = 4;
+
+	repeated SupplyWaypointEta supply_waypoint_eta_list = 7;
+
+	enum EtaActionType{
+		WAYPOINT_UPDATE = 0;	// 경유지 변경으로 인한 갱신
+		PATH_OFFTRACK = 1;			// 주행경로 이탈로 인한 경로 재계산 후 갱신
+		ETA_OFFTRACK = 2;			// 기존 ETA 대비 차이가 심할때 갱신
+	}
+}
+
+message SupplyWaypointEta{
+	int32 supply_id = 1;
+	int32 waypoint_seq = 2;
+	google.protobuf.Timestamp eta = 3;	
+	//repeated string pick_up_demand_id_list = 4;
+	//repeated string drop_off_demand_id_list = 5;
+	//repeated int32 pick_up_user_id_list = 6;
+	//repeated int32 drop_off_user_id_list = 7;
+}
