@@ -5,12 +5,11 @@ import com.google.protobuf.Empty
 import com.rngrpcapp.BuildConfig
 import frontend.Frontend
 import frontend.Frontend.UserStateResponse
-//import frontend.FrontEndGrpc
-//import frontend.Frontend
 import frontend.UserServiceGrpc
 import frontend.UserServiceGrpc.UserServiceStub
 import frontend.SupplyServiceGrpc
 import frontend.SupplyServiceGrpc.SupplyServiceStub
+import frontend.Frontend.SupplyLocationResponse
 import io.grpc.*
 import io.grpc.stub.AbstractAsyncStub
 import io.grpc.stub.StreamObserver
@@ -26,15 +25,22 @@ object GrpcService: Closeable {
     var post:String? = null;
     var isDebug:Boolean = true;
 
-    //jsonObject 데이터 변수
-    var userStateData = JSONObject();
+    //grpc received 데이터
+    lateinit var userStateData : frontend.Frontend.UserStateResponse
+    lateinit var supplyLocationData : frontend.Frontend.SupplyLocationResponse
+
+    private var originChannel: ManagedChannel? = null;
 
     //grpc 통신 observer
     private lateinit var userStateObserver: StreamObserver<UserStateResponse>
+    private lateinit var supplyServiceObserver: StreamObserver<SupplyLocationResponse>
 
+    //grpc header intercept용 stub
+    private lateinit var asyncUserServiceStub: UserServiceGrpc.UserServiceStub;
+    private lateinit var asyncSupplyLocationStub: SupplyServiceGrpc.SupplyServiceStub;
 
-    private var originChannel: ManagedChannel? = null;
-    private lateinit var asyncStub: UserServiceGrpc.UserServiceStub;
+    //grpc 값 입력용 observer
+    public lateinit var supplyLocationObserver: StreamObserver<Frontend.GetSupplyLocationRequest>
 
     fun initGrpc(_accessToken:String) {
         //채널이 살아 있으면 즉시 종료 함.
@@ -69,16 +75,18 @@ object GrpcService: Closeable {
         // TODO: accesstk 가 없는 경우, (로그아웃 후 앱 종료 -> 앱 재실행)
         //  null 인 경우 header 에 현재 "" 으로 넣고있음
         //  추가로 gRPC Error Handling 필요
-        asyncStub = UserServiceGrpc.newStub(
+        asyncUserServiceStub = UserServiceGrpc.newStub(
             ClientInterceptors.intercept(
                 originChannel,
                 HeaderClientInterceptor(_accessToken)))
 
+        asyncSupplyLocationStub = SupplyServiceGrpc.newStub(
+            ClientInterceptors.intercept(
+                originChannel,
+                HeaderClientInterceptor(_accessToken)))
     }
 
     override fun close() {
-        //Log.d(TAG_GRPC, "close()")
-
         // 채널이 닫혀있는지 체크
         // isShutdown -> 채널이 종료 여부 반환. 종료 채널은 새로운 call 을 즉시 취소하지만 일부 통화는 여전히 처리 중일 수 있음.
         // isTerminated -> 채널이 종료 여부를 반환. 종료된 채널에는 실행 중인 호출이 없고 관련 리소스(예: TCP 연결)가 해제됩니다.
@@ -94,7 +102,12 @@ object GrpcService: Closeable {
     }
 
     fun getUserState(observer: StreamObserver<Frontend.UserStateResponse>) {
-        asyncStub.getUserState(Empty.newBuilder().build(), observer)
+        asyncUserServiceStub.getUserState(Empty.newBuilder().build(), observer)
+    }
+
+    fun getSupplyLocation(observer: StreamObserver<Frontend.SupplyLocationResponse>) {
+        //asyncSupplyLocationStub.getSupplyLocation(Empty.newBuilder().build(), observer)
+        supplyLocationObserver = asyncSupplyLocationStub.getSupplyLocation(observer)
     }
 
 }
