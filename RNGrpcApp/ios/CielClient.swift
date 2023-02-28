@@ -12,7 +12,6 @@ import NIOConcurrencyHelpers
 import SwiftProtobuf
 
 @objc(CielClient) class CielClient : NSObject{
-  var cielServiceClient: Frontend_UserServiceNIOClient?
   let port: Int = 8053
   @objc static func requiresMainQueueSetup() -> Bool {
     return false
@@ -30,9 +29,8 @@ import SwiftProtobuf
     
     return Frontend_UserServiceAsyncClient(channel: secureGrpcChannel)
   }
-  @objc func getUserStateClient(
-    _ resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+  func getUserStateClient(
+    _ str: String = ""
   ) async
   {
     print("called from react-native ")
@@ -42,15 +40,22 @@ import SwiftProtobuf
     }
     let cielServiceClient = try? self.createGrpcServiceClient(eventLoopGroup: eventLoopGroup)
     do {
-      
-    for try await res in cielServiceClient!.getUserState(Google_Protobuf_Empty()) {
+      for try await res in cielServiceClient!.getUserState(Google_Protobuf_Empty()) {
       print("responses : \(res)")
     }
-      resolve("success")
     } catch {
       let error = NSError(domain: "", code: 200, userInfo: nil)
-      reject("0", "RPC method ‘getUserState’ failed", error)
     }
+  }
+  
+  @objc func getUserState(
+    _ resolve: RCTPromiseResolveBlock,
+    rejecter reject: RCTPromiseRejectBlock
+  )  {
+    Task {
+      await getUserStateClient()
+    }
+    resolve("success")
   }
 
 }
