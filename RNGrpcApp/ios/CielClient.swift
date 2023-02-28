@@ -21,11 +21,12 @@ import SwiftProtobuf
   ) throws -> Frontend_UserServiceAsyncClient {
     print("### frontend user  service client starting ...##")
     let secureGrpcChannel = try GRPCChannelPool.with(
-      //target: .host("test.2bt.kr", port: port),
-      target: .host("127.0.0.1", port: 50051),
+      target: .host("test.2bt.kr", port: port),
+      //target: .host("127.0.0.1", port: 50051),
       transportSecurity: .plaintext,
       eventLoopGroup: eventLoopGroup
     )
+    
     
     return Frontend_UserServiceAsyncClient(channel: secureGrpcChannel)
   }
@@ -41,7 +42,7 @@ import SwiftProtobuf
     let cielServiceClient = try? self.createGrpcServiceClient(eventLoopGroup: eventLoopGroup)
     do {
       for try await res in cielServiceClient!.getUserState(Google_Protobuf_Empty()) {
-      print("responses : \(res)")
+        print("responses : \(res.userStateWithInfo)")
     }
     } catch {
       let error = NSError(domain: "", code: 200, userInfo: nil)
