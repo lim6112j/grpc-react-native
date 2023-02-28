@@ -17,6 +17,14 @@
 		851D10952921DA6300B9238F /* authService.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851D10932921DA6200B9238F /* authService.pb.swift */; };
 		851D10972921DB5900B9238F /* AuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851D10962921DB5900B9238F /* AuthClient.swift */; };
 		851D10992921FB4700B9238F /* AuthClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 851D10982921FB4700B9238F /* AuthClient.m */; };
+		853B488D29ACA415009887E1 /* cielService.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853B488B29ACA415009887E1 /* cielService.pb.swift */; };
+		853B488E29ACA415009887E1 /* cielService.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853B488C29ACA415009887E1 /* cielService.grpc.swift */; };
+		85B8F4EC29AA3D2B008BEC94 /* route_guide.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B8F4EA29AA3D2B008BEC94 /* route_guide.grpc.swift */; };
+		85B8F4ED29AA3D2B008BEC94 /* route_guide.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B8F4EB29AA3D2B008BEC94 /* route_guide.pb.swift */; };
+		85B8F4F029AA483B008BEC94 /* helloworld.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B8F4EE29AA483B008BEC94 /* helloworld.pb.swift */; };
+		85B8F4F129AA483B008BEC94 /* helloworld.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B8F4EF29AA483B008BEC94 /* helloworld.grpc.swift */; };
+		85D7AE4329A5EBB300E5C756 /* CielClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D7AE4229A5EBB300E5C756 /* CielClient.swift */; };
+		85D7AE4529A6032300E5C756 /* CielClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 85D7AE4429A6032300E5C756 /* CielClient.m */; };
 		8F67FD1D2C222084B033A62B /* Pods_RNGrpcApp_RNGrpcAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 301D34575C261657983744C2 /* Pods_RNGrpcApp_RNGrpcAppTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -52,6 +60,14 @@
 		851D10932921DA6200B9238F /* authService.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = authService.pb.swift; path = ../../proto/ios/authService.pb.swift; sourceTree = "<group>"; };
 		851D10962921DB5900B9238F /* AuthClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthClient.swift; sourceTree = "<group>"; };
 		851D10982921FB4700B9238F /* AuthClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuthClient.m; sourceTree = "<group>"; };
+		853B488B29ACA415009887E1 /* cielService.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = cielService.pb.swift; path = "../../grpc-swift/Sources/Examples/CielService/Model/cielService.pb.swift"; sourceTree = "<group>"; };
+		853B488C29ACA415009887E1 /* cielService.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = cielService.grpc.swift; path = "../../grpc-swift/Sources/Examples/CielService/Model/cielService.grpc.swift"; sourceTree = "<group>"; };
+		85B8F4EA29AA3D2B008BEC94 /* route_guide.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = route_guide.grpc.swift; path = ../../proto/ios/route_guide.grpc.swift; sourceTree = "<group>"; };
+		85B8F4EB29AA3D2B008BEC94 /* route_guide.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = route_guide.pb.swift; path = ../../proto/ios/route_guide.pb.swift; sourceTree = "<group>"; };
+		85B8F4EE29AA483B008BEC94 /* helloworld.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = helloworld.pb.swift; path = ../../proto/ios/helloworld.pb.swift; sourceTree = "<group>"; };
+		85B8F4EF29AA483B008BEC94 /* helloworld.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = helloworld.grpc.swift; path = ../../proto/ios/helloworld.grpc.swift; sourceTree = "<group>"; };
+		85D7AE4229A5EBB300E5C756 /* CielClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CielClient.swift; sourceTree = "<group>"; };
+		85D7AE4429A6032300E5C756 /* CielClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CielClient.m; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-RNGrpcApp-RNGrpcAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNGrpcApp-RNGrpcAppTests.release.xcconfig"; path = "Target Support Files/Pods-RNGrpcApp-RNGrpcAppTests/Pods-RNGrpcApp-RNGrpcAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -96,6 +112,12 @@
 		13B07FAE1A68108700A75B9A /* RNGrpcApp */ = {
 			isa = PBXGroup;
 			children = (
+				853B488C29ACA415009887E1 /* cielService.grpc.swift */,
+				853B488B29ACA415009887E1 /* cielService.pb.swift */,
+				85B8F4EF29AA483B008BEC94 /* helloworld.grpc.swift */,
+				85B8F4EE29AA483B008BEC94 /* helloworld.pb.swift */,
+				85B8F4EA29AA3D2B008BEC94 /* route_guide.grpc.swift */,
+				85B8F4EB29AA3D2B008BEC94 /* route_guide.pb.swift */,
 				851D10922921DA6200B9238F /* authService.grpc.swift */,
 				851D10932921DA6200B9238F /* authService.pb.swift */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -107,6 +129,8 @@
 				851D10912921DA6100B9238F /* RNGrpcApp-Bridging-Header.h */,
 				851D10962921DB5900B9238F /* AuthClient.swift */,
 				851D10982921FB4700B9238F /* AuthClient.m */,
+				85D7AE4229A5EBB300E5C756 /* CielClient.swift */,
+				85D7AE4429A6032300E5C756 /* CielClient.m */,
 			);
 			name = RNGrpcApp;
 			sourceTree = "<group>";
@@ -392,12 +416,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85B8F4F129AA483B008BEC94 /* helloworld.grpc.swift in Sources */,
+				85B8F4EC29AA3D2B008BEC94 /* route_guide.grpc.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				851D10972921DB5900B9238F /* AuthClient.swift in Sources */,
+				85D7AE4329A5EBB300E5C756 /* CielClient.swift in Sources */,
+				853B488D29ACA415009887E1 /* cielService.pb.swift in Sources */,
 				851D10992921FB4700B9238F /* AuthClient.m in Sources */,
+				853B488E29ACA415009887E1 /* cielService.grpc.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				85B8F4ED29AA3D2B008BEC94 /* route_guide.pb.swift in Sources */,
 				851D10952921DA6300B9238F /* authService.pb.swift in Sources */,
 				851D10942921DA6300B9238F /* authService.grpc.swift in Sources */,
+				85B8F4F029AA483B008BEC94 /* helloworld.pb.swift in Sources */,
+				85D7AE4529A6032300E5C756 /* CielClient.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -474,6 +506,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = RNGrpcApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -500,6 +533,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = RNGrpcApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

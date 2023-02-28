@@ -13,6 +13,7 @@
 import React, { useState } from 'react';
 import { Button, NativeModules, Alert } from 'react-native';
 import { Greeter } from './helloworld';
+import {UserState} from './cielclient';
 const { AuthClient } = NativeModules;
 import {
     SafeAreaView,
@@ -46,6 +47,16 @@ const App = () => {
         await AuthClient.logout(oauthToken);
         setOauthToken('');
     };
+    const userState = async (param: any) => {
+        console.log('calling getUserState !!!!', param);
+        try {
+            const stateVar = await UserState.getUserState();
+            console.log('userstate response', stateVar);
+        } catch (error: any) {
+            console.log(error);
+            console.log(error.message);
+        }
+    };
     return (
         <SafeAreaView>
             <TextInput
@@ -67,6 +78,10 @@ const App = () => {
             <Button
                 title="Logout"
                 onPress={() => { logout(oauthToken); }}
+            />
+            <Button
+                title="getUserState"
+                onPress={() => { userState("test"); }}
             />
             <Text>Oauth Token: {oauthToken}</Text>
         </SafeAreaView>
