@@ -20,6 +20,12 @@ const sayHello = (call, callback) => {
   console.log(`name : '${name}'`)
   callback(null, {message})
 }
+const sayHelloStream = (call, callback) => {
+  let name = call.request.name
+  const message = `Hello , ${name}`
+  console.log(`name : '${name}'`)
+  callback(null, {message})
+}
 function getGrpcServer() {
   const grpcServer = new grpc.Server()
   grpcServer.addService(helloworldService.Greeter.service, {
