@@ -10,7 +10,7 @@
 @interface RCT_EXTERN_MODULE(CielClient, NSObject)
   RCT_EXTERN_METHOD(init)
   RCT_EXTERN_METHOD(
-    getUserStateClient: (RCTPromiseResolveBlock) resolve
+    getUserState: (RCTPromiseResolveBlock) resolve
     rejecter: (RCTPromiseRejectBlock) reject
   )
 @end
