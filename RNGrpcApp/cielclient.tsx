@@ -4,3 +4,8 @@ export const UserState = {
     return NativeModules.CielClient.getUserState();
   },
 };
+export const UserModule = {
+  getUserState: (): Promise<String> => {
+    return NativeModules.Ciel.getUserState();
+  },
+};

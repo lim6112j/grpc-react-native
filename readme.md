@@ -86,10 +86,6 @@
 
 - 2023-02-23 ciel proto file compile
 
-      cd Protos/v1/FrontEnd
-      protoc frontend_ios.proto \
-      --grpc-swift_opt=Client=true,Server=false \
-      --grpc-swift_out=ios \
-      --proto_path=. \
-      --swift_opt=Visibility=Public \
-      --swift_out=ios
+      cd grpc/grpc-swift
+      make generate-cielservice
+      move generated swift and pb file to ios project
