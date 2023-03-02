@@ -6,6 +6,6 @@ export const UserState = {
 };
 export const UserModule = {
   getUserState: (): Promise<String> => {
-    return NativeModules.Ciel.getUserState();
+    return NativeModules.CielModule.getUserState();
   },
 };
