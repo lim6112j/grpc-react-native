@@ -11,8 +11,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class GRPCPackage implements ReactPackage {
-    public static final String HOST = "192.168.0.110";
-    public static final int PORT = 50051;
+    public static final String HOST = "test.2bt.kr";
+    public static final int PORT = 8053;
     public static final boolean USE_PLAINTEXT = true;
 
     @Override
@@ -24,7 +24,7 @@ public class GRPCPackage implements ReactPackage {
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
 
-        modules.add(new GreeterModule(reactContext));
+        modules.add(new CielModule(reactContext));
 
         return modules;
     }

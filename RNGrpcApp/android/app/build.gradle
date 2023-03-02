@@ -1,3 +1,5 @@
+apply plugin: "kotlin-android"
+apply plugin: "kotlin-android-extensions"
 apply plugin: "com.android.application"
 apply plugin: 'com.google.protobuf'
 import com.android.build.OutputFile
@@ -222,8 +224,35 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
+
+            // 1: 대구, 3: 강릉, 5: DIFA, 7: 세종, 8: 서울 중구 다산동
+            buildConfigField "int", "USER_APP_IDX", "1"
+
+            // GRPC URL
+            buildConfigField "String", "GRPC_URL", '"test.2bt.kr"'
+
+            buildConfigField "int", "GRPC_PORT_HTTPS", '8053'
+            buildConfigField "int", "GRPC_PORT_HTTP", '8054'
+            buildConfigField "boolean", "GRPC_USE_HTTPS", "true"
+
         }
         release {
+
+            // 1: 대구, 3: 강릉, 5: DIFA, 7: 세종
+            buildConfigField "int", "USER_APP_IDX", "1"
+
+            // API URL
+//            buildConfigField "String", "BASE_URL", '"test.2bt.kr"'
+            buildConfigField "String", "BASE_URL", '"stage.mobble.co.kr"'
+//            buildConfigField "String", "BASE_URL", '"api.mobble.co.kr"'
+            // WEB URL
+            buildConfigField "String", "WEB_URL", '"https://mobble.co.kr"'
+
+            buildConfigField "String", "API_PORT", '"8052"'
+            buildConfigField "int", "GRPC_PORT_HTTPS", '8053'
+            buildConfigField "int", "GRPC_PORT_HTTP", '8054'
+            buildConfigField "boolean", "GRPC_USE_HTTPS", "true"
+
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.debug
@@ -254,12 +283,19 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
     //implementation 'com.google.protobuf:protobuf-lite:3.0.0'
+
+    //gRPC
     implementation 'io.grpc:grpc-okhttp:1.50.2'
     implementation 'io.grpc:grpc-protobuf-lite:1.50.2'
     implementation 'io.grpc:grpc-stub:1.50.2'
     compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // necessary for Java 9+
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+
+    //kotlin 추가
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.10"
+    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.appcompat:appcompat:1.5.0'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'

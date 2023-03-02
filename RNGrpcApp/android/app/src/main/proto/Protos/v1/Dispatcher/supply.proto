@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+option csharp_namespace = "Protos.v1.Dispatcher";
+
+import "google/protobuf/timestamp.proto"; 
+import "Protos/v1/Base/loc.proto";
+
+package supply;
+
+message Supply{
+//   int32 index = 1; // 현재 용도 불명. 기존 list형태로 저장될 때의 색인.
+  string id = 2;
+  // 내부 Dictionary Key
+  string name = 3;
+  // int32 region = 4; // 내부 양식에서 regionCode 제거되었음.
+  // 0 or 1. service_start, service_end
+  ServiceState state = 5; 
+  
+  google.protobuf.Timestamp update_time = 6;
+  // 내부에서는 longitude, latitude 별도
+  loc.LngLat location = 7; 
+  
+  repeated RoutingQueue routing_queue_list = 8;
+  repeated string routing_demand_list = 9; // ID값
+  repeated RoutingDistance routing_distance_list = 10;
+  
+  int32 current_passenger = 11; // 현시점의 탑승객 수 (= 남은 하차Queue의 수)
+  
+  enum ServiceState{
+        SERVICE_START = 0;
+        SERVICE_END = 1;
+  }
+
+  message RoutingQueue{
+    int32 node_index = 1;
+    string station_id = 2; 
+    // 동일 링크노드상 여러 정류장 존재시 경유 순서 지정.
+    int32 station_priority = 3;
+    int32 user_id = 4;
+    // 불변값
+    QueueState state = 5;
+    string demand_id = 6;
+    // 해당 demand의 탑승인원
+    int32 demand_passenger = 7;
+    // 다음 Queue까지의 경로 인덱스. 동일 정류장이거나 마지막 큐면 -1.
+    int32 path_index = 8; 
+    // 경로의 길이 [m]. 배차시 실질적 판단기준.
+    double path_distance = 9; 
+    // 다음 Queue까지의 예상이동시간 [sec]. 동일 정류장 또는 마지막 큐일시 0.
+    double estimate_time = 10; 
+    // 경유지 단위 방문 순서. 0부터 시작.
+    int32 sequence_index = 11;
+    // 배차취소 플래그 (미사용) 
+    bool cancel_segment = 12; 
+
+    // 배차알고리즘 외부의 엔진단에서 별도 조회하여 추가
+    string station_name = 13;
+    loc.LngLat station_lng_lat = 14;
+
+    // START : 탑승지 / END : 하차지 / CANCEL : 배차 취소 지점 / RELOCATION : 재배치 지점 / 
+    // PREDICTION : 수요 예측 지점 / ROTATION : 교대지 / REST : 휴게지 / GARAGE : 차고지 / REPAIR : 수리지 / ROUTE : 고정노선
+    enum QueueState{
+        START = 0; // 승차지
+        END = 1; // 하차지
+        CANCEL = 2;
+        RELOCATION = 3; // 재배치
+        PREDICTION = 4; // 수요예측이동
+        ROTATION = 5; 
+        REST = 6; 
+        GARAGE = 7; 
+        REPAIR = 8;
+        ROUTE = 9;
+    }
+  }
+  
+  message RoutingDistance{
+    string demand_id = 1;
+    int32 user_id = 2;
+    int32 state = 3;
+    // 배차 시점에서 차량의 노드 (최초 부여 후 불변)
+    int32 demand_node = 4;
+    // 가변. 매 배차마다 갱신
+    int32 recent_node = 5;
+    // 최초 배차시 대기거리
+    double init_wait_distance = 6;
+    // 최초 배차시 운행거리
+    double init_race_distance = 7;
+    double diff_wait_distance = 8; // 가변. 매 배차마다 갱신
+    double diff_race_distance = 9; // 가변.
+  }
+}
