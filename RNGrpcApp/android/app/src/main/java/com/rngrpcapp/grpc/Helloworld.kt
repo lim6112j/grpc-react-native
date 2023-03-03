@@ -53,11 +53,12 @@ fun getSupplyState(_supplyIdx: Int){
         }
 
         override fun onError(t: Throwable?) {
+            Log.d("테스트 onError", "error while getSupplyLocation")
 
         }
 
         override fun onCompleted() {
-
+            Log.d("테스트 onCompleted", "getSupplyLocation completed")
         }
 
     })

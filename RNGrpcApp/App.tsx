@@ -12,7 +12,7 @@
 
 import React, {useState} from 'react';
 import {Button, NativeModules, Alert, Platform} from 'react-native';
-import {UserState, UserService} from './cielclient';
+import {UserState, UserModule} from './cielclient';
 const {AuthClient} = NativeModules;
 import {SafeAreaView, Text, TextInput} from 'react-native';
 
@@ -39,8 +39,22 @@ const App = () => {
       const stateVar =
         Platform.OS === 'ios'
           ? await UserState.getUserState()
-          : await UserService.getUserState();
+          : await UserModule.getUserState();
       console.log('userstate response', stateVar);
+    } catch (error: any) {
+      console.log(error);
+      console.log(error.message);
+    }
+  };
+
+  const supplyState = async (param: any) => {
+    console.log('calling getSupplyState !!!!', param);
+    try {
+      const stateVar =
+        Platform.OS === 'ios'
+          ? await UserState.getSupplyState()
+          : await UserModule.getSupplyState(6);
+      console.log('supplyState response', stateVar);
     } catch (error: any) {
       console.log(error);
       console.log(error.message);
@@ -76,6 +90,12 @@ const App = () => {
         title="getUserState"
         onPress={() => {
           userState('test');
+        }}
+      />
+      <Button
+        title="getSupplyState"
+        onPress={() => {
+          supplyState('test');
         }}
       />
       <Text>Oauth Token: {oauthToken}</Text>

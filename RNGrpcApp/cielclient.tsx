@@ -8,4 +8,7 @@ export const UserModule = {
   getUserState: (): Promise<String> => {
     return NativeModules.CielModule.getUserState();
   },
+  getSupplyState: (supplyIdx: number): Promise<String> => {
+    return NativeModules.CielModule.getSupplyState(supplyIdx);
+  },
 };
